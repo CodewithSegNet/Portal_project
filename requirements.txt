@@ -12,3 +12,6 @@ retrying
 python-decouple
 Flask-cors
 gunicorn
+Flask-Compress
+black
+flask_restx

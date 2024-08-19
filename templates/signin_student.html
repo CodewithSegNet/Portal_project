@@ -48,18 +48,10 @@
         <!-- <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}"> -->
         <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css')}}">
 
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/portal.css')}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/portalcss.css')}}">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}" async></script>
 
-
-
-
-
-
-
-
-
-
-		
     </head>
 <body>
   <div class="container">
@@ -74,25 +66,17 @@
         <h2>Sign In</h2>
         <p>Welcome to Braham Health College Portal | Student</p>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% set shown = false %}
-            <div class="flash-messages">
-                {% for category, message in messages %}
-                    {% if not shown %}
-                        <div class="alert alert-{{ category }}">
-                            {{ message }}
-                        </div>
-                        {% set shown = true %}
-                    {% endif %}
-                {% endfor %}
+            <div class="flash-messages" >
+                    <div class="alert" style="display: none;" >
+                        <div id="message"></div>
+                    </div>
             </div>
-        {% endif %}
-    {% endwith %}
+    
 
         <form action="/login" method="POST" id="signInForm">
+
           <div class="group">
-            <label for="username">Admission Number</label>
+            <label for="admission_number">Admission Number</label>
             <input type="text" id="admission_number" name="admission_number" required>
           </div>
           <div class="group">
@@ -102,16 +86,22 @@
           <div class="group checkbox-group">
             <input type="checkbox" id="rememberMe">
             <label for="rememberMe">Remember me</label>
+
           </div>
           <button type="submit" class="btn" value="Sign In">Sign in</button>
         </form>
         <a href="#" class="forgot-password">Forgot password?</a>
         <div class="input-group home mt-2">
           <a href="{{ url_for('pages.home') }}" class=""><i class="larger-icon icofont-home"></i> Home</a>
-          <a href="{{ url_for('pages.signinadmin') }}" class=""><i class="larger-icon icofont-loop"></i> Admin</a>
+          <a href="{{ url_for('pages.sign_in_admin') }}" class=""><i class="larger-icon icofont-loop"></i> Admin</a>
         </div>
       </div>
   </div>
+
+   
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
+
 </body>
 </html>

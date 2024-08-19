@@ -598,7 +598,7 @@ body{
 .slider .single-slider {
 	height: 600px;
 	background-size: cover;
-	background-position: center;
+	background-position: top;
 	background-repeat:no-repeat;
 }
 .slider .single-slider .text{

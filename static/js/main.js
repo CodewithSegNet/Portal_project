@@ -32,21 +32,23 @@ Version:	1.1
 =========================================
 [End Activation Code]
 =========================================*/ 
-$(document).ready(function() {
-	$('.sidebar-item').click(function(e) {
-	  e.preventDefault();
-	  // Get the data-content attribute value
-	  var contentToShow = $(this).data('content');
 
-	  // Hide all content sections
-	  $('.content-section').hide();
+// (function($) {
+//     "use strict";
+// $(document).ready(function() {
+// 	$('.sidebar-item').click(function(e) {
+// 	  e.preventDefault();
+// 	  // Get the data-content attribute value
+// 	  var contentToShow = $(this).data('content');
 
-	  // Show the selected content section
-	  $('#' + contentToShow).show();
-	});
-  });
+// 	  // Hide all content sections
+// 	  $('.content-section').hide();
 
-
+// 	  // Show the selected content section
+// 	  $('#' + contentToShow).show();
+// 	});
+//   });
+// })
 
 // $(document).ready(function() {
 //     $(window).on('scroll', function() {
@@ -69,7 +71,6 @@ $(document).ready(function() {
      $(document).on('ready', function() {
 	
         jQuery(window).on('scroll', function() {
-			console.log("Scroll event triggered.");
 			if ($(this).scrollTop() > 200) {
 				$('#header .header-inner').addClass("sticky");
 			} else {
@@ -81,7 +82,6 @@ $(document).ready(function() {
 			Sticky Header JS
 		======================================*/ 
 		jQuery(window).on('scroll', function() {
-			console.log("Scroll event triggered."); 
 			if ($(this).scrollTop() > 100) {
 				$('.header').addClass("sticky");
 			} else {
@@ -90,7 +90,6 @@ $(document).ready(function() {
 		});
 
 		jQuery(window).on('scroll', function() {
-			console.log("Scroll event triggered."); 
 			if ($(this).scrollTop() > 100) {
 				$('.logo').addClass("max");
 			} else {
