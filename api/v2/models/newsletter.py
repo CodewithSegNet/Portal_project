@@ -5,13 +5,13 @@
 from app import db
 from datetime import datetime
 import re
+from sqlalchemy.dialects.postgresql import UUID
 import uuid
-
 
 
 class Newsletter(db.Model):
     __tablename__ = "newsletters"
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid7()), nullable=False)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()), nullable=False)
     email = db.Column(db.String(100), nullable=False)
 
     # A validation check for email format using python library 'validate_email'

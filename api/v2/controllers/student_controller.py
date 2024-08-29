@@ -49,13 +49,45 @@ from api.v2.models import (
     PaymentStatus,
 )
 from api.v2.controllers.homepage_controller import pages_bp
-from api.v2.controllers.courses_controller import assign_courses
+from api.v2.controllers.courses_controller import assign_courses, Course
 from app import cache, db
 from api.v2.views.page_views_route import *
 from flask_restx import Namespace, Resource, fields
 
 
 user_bp = Blueprint("user", __name__, template_folder="templates")
+
+
+
+
+
+
+
+# /****************************************** END OF COURSES ************************************************/
+
+
+
+def add_courses_to_user(user, courses_data):
+    # Create and assign courses to the new user
+    for course_data in courses_data:
+        new_course = Course(
+            course_code=course_data["course_code"],
+            student_id=user.admission_number,
+            course_title=course_data["course_title"],
+            credit=course_data["credit"],
+            ca_score=None,
+            exam_score=None,
+            total_score=None,
+            grade=None,
+            remark=None,
+        )
+        db.session.add(new_course)
+        user.courses.append(new_course)
+
+
+
+
+
 
 
 # Define the Namespace for the student API
@@ -98,7 +130,12 @@ class StudentLogin(Resource):
                     'token': token,
                     'user_id': user.admission_number
                 }
-                return jsonify(response)
+                
+                
+                session['token'] = response['token']
+                session['user_id'] = response["user_id"]
+
+                return response, 200
             else:
                 flash('Invalid admission number or password', 'danger')
                 return{'message': 'Invalid admission number or password'}, 401
@@ -206,91 +243,113 @@ def get_student_info():
 # /****************************************** REGISTERS ROUTES ************************************************/
 
 
-@user_bp.route("/student/register", methods=["POST"])
-def registration():
-    """
-    A function that handles users registration
-    """
-
-    try:
+@student_ns.route("/register")
+class Register(Resource):
+    def post(self):
+        """
+        A function that handles user registration
+        """
         data = request.json
-        existing_student = Student.query.filter_by(
-            admission_number=data["admission_number"]
-        ).first()
+        required_fields = [
+            "admission_number", "password", "name", "date_of_birth", "state",
+            "gender", "semester", "department_name", "department_level", "email", "phone_number"
+        ]
+
+        # Validate that all required fields are present in the request
+        for field in required_fields:
+            if not data.get(field):
+                return {"error": f"{field} is required."}, 400
+
+        existing_student = Student.query.filter_by(admission_number=data["admission_number"]).first()
         existing_email = Student.query.filter_by(email=data["email"]).first()
 
         if existing_student:
-            return jsonify({"error": "Admission Number Already Exists!"}), 400
+            return {"error": "Admission Number Already Exists!"}, 400
         if existing_email:
-            return jsonify({"error": "Email Already Exists!"}), 400
+            return {"error": "Email Already Exists!"}, 400
 
-        # Create a new user instance
-        new_user = Student(
-            admission_number=data["admission_number"],
-            password=generate_password_hash(data["password"]),
-            department_name=data["department_name"],
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow(),
-        )
+        try:
+            with db.session.no_autoflush:
+                # Create a new user instance and map all required fields
+                new_user = Student(
+                    admission_number=data["admission_number"],
+                    password=generate_password_hash(data["password"]),
+                    name=data["name"],
+                    date_of_birth=data["date_of_birth"],
+                    state=data["state"],
+                    gender=data["gender"],
+                    email=data["email"],
+                    phone_number=data["phone_number"],
+                    department_name=data["department_name"],
+                    created_at=datetime.utcnow(),
+                    updated_at=datetime.utcnow(),
+                )
 
-        db.session.add(new_user)
-        db.session.commit()
+                db.session.add(new_user)
+                db.session.commit()  
 
-        department_level = data.get("department_level")
-        department_name = data.get("department_name")
-        id = 0
+            department_level = int(data.get("department_level"))
+            department_name = data.get("department_name")
+            id = 0
 
-        department = Department.query.filter_by(id=id).first()
-        if department is None:
-            # If department doesn't exist, create a new department
-            new_department = Department(
-                department_level=department_level, department_name=department_name
-            )
-            new_user.departments.append(new_department)
-            db.session.add(new_department)
-            db.session.commit()  # Commit changes after creating a new department
+            department = Department.query.filter_by(id=id).first()
+            if department is None:
+                # If department doesn't exist, create a new department
+                new_department = Department(
+                    department_level=department_level, department_name=department_name
+                )
+                new_user.departments.append(new_department)
+                db.session.add(new_department)
+                db.session.commit()  # Commit changes after creating a new department
 
-        if department:
-            # Set student_id in department to associate it with the new user
-            department.student_id = new_user.admission_number
+            if department:
+                # Set student_id in department to associate it with the new user
+                department.student_id = new_user.admission_number
+                db.session.commit()
+
+            # Check if the provided semester exists in the semesters table
+            semester_name = data.get("semester")
+            if semester_name:
+                semester = Semester.query.filter_by(id=id).first()
+                if semester is None:
+                    new_semester = Semester(semester=semester_name)
+                    new_user.semesters.append(new_semester)
+                    db.session.add(new_semester)
+                    db.session.commit()  # Commit changes after creating a new semester
+                else:
+                    new_user.semesters.append(semester)
+
+                if semester:
+                    # Set student_id in department to associate it with the new user
+                    semester.student_id = new_user.admission_number
+                    db.session.commit()
+            else:
+                return {"error": "Semester value is missing or invalid"}, 400
+
+            for course in new_user.courses:
+                course.student_id = new_user.admission_number
+
+            new_course = assign_courses(new_user, department_name, department_level, semester_name)
+            
+            if new_course is None:
+                print("No courses assigned. Please check the `assign_courses` function.")
+            else:
+                print(f"Courses assigned: {new_course}")
+
             db.session.commit()
 
-        # Check if the provided semester exists in the semesters table
-        semester_name = data.get("semester")
-        if semester_name:
-            semester = Semester.query.filter_by(id=id).first()
-            if semester is None:
-                new_semester = Semester(semester=semester_name)
-                new_user.semesters.append(new_semester)
-                db.session.add(new_semester)
-                db.session.commit()  # Commit changes after creating a new semester
-            else:
-                new_user.semesters.append(semester)
+            # Return JSON successful message if data's works
+            return {"message": "User Registration Successfully Created!"}, 201
 
-            if semester:
-                # Set student_id in department to associate it with the new user
-                semester.student_id = new_user.admission_number
-                db.session.commit()
-        else:
-            return jsonify({"error": "Semester value is missing or invalid"}), 400
-
-        for course in new_user.courses:
-            course.student_id = new_user.admission_number
-
-        assign_courses(new_user, department_name, department_level, semester_name)
-
-        db.session.commit()
-
-        # Return JSON successful message if data's works
-        return jsonify({"message": "User Registration Successfully Created!"}), 201
-
-    # Handles database issues (connection or constraint violation)
-    except SQLAlchemyError as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
-
-
+        # Handles database issues (connection or constraint violation)
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return {"error": str(e)}, 500
+        
 # /****************************************** ENDS OF REGISTERS ROUTES ************************************************/
+
+
+
 
 
 # /****************************************** UPDATES ROUTES ************************************************/
@@ -368,16 +427,17 @@ def update_password():
 
 # /****************************************** END OF UPDATES ROUTES ************************************************/
 
-
-
-@pages_bp.route("/student/dashboard")
+@pages_bp.route("/students/dashboard", methods=['GET'])
 def student_dashboard():
-    if "user_id" in session:
-        admission_number = session.get("user_id")
-        token = session.get("token")
+    """
+    Renders the student dashboard HTML page.
+    """
+    # Retrieve admission number and token from session or request args
+    admission_number = session.get("user_id") or request.args.get('admission_number')
+    token = session.get("token") or request.args.get('token')
 
     if not admission_number or not token:
-        return jsonify({"error": "Unauthorized"}), 401
+        return render_template("unauthorized.html"), 401
 
     current_user = Student.query.get(admission_number)
     courses = current_user.courses
@@ -385,15 +445,10 @@ def student_dashboard():
     semesters = current_user.semesters
     images = current_user.images
 
-    # Manually replace slashes with %2F
+    # Encode admission number
     encoded_admission_number = current_user.admission_number.replace("/", "%2F")
-
     user_image_path = f"/images?admission_number={encoded_admission_number}"
-
-    print("Image file exists:", os.path.exists(user_image_path))
-    print("User Image Path:", user_image_path)
-
-    image1 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunnahlogo.avif")
+    image1 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
 
     return render_template(
         "dashboard.html",
@@ -404,14 +459,11 @@ def student_dashboard():
         user_image=image1,
         user_image_path=user_image_path,
         images=images,
-        os=os,
     )
     
     
     
-    
-    
-@pages_bp.route("/student/images", methods=["GET"])
+@pages_bp.route("/images", methods=["GET"])
 def get_image():
     admission_number = request.args.get("admission_number")
 

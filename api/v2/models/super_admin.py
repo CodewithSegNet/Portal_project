@@ -6,6 +6,7 @@ from app import db
 from datetime import datetime
 import re
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
@@ -14,7 +15,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class SuperAdmin(db.Model):
     __tablename__ = "super_admins"
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid7()), nullable=False)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)

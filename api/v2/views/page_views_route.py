@@ -8,7 +8,7 @@ from api.v2.controllers.homepage_controller import pages_bp
 
 
 
-@pages_bp.route("/sign-in/student")
+@pages_bp.route("/login/student")
 def sign_in_student():
     """
     A Route thats handles the StudentSignIn
@@ -19,12 +19,11 @@ def sign_in_student():
     return render_template("signin_student.html", user_image=image1)
 
 
-@pages_bp.route("/sign-in/admin")
+@pages_bp.route("/login/admin")
 def sign_in_admin():
 
-    image1 = os.path.join(
-        current_app.config["UPLOAD_FOLDER"], "sunnah_college_logo-removebg-preview.png"
-    )
+    image1 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
+
 
     return render_template("signin_admin.html", user_image=image1)
 

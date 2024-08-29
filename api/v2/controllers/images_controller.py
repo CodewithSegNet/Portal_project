@@ -46,7 +46,6 @@ def upload_image():
                 filename = file.filename
                 image_data = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
                 file.save(image_data)
-
                 # Create a new image record and associate it with the student
                 image = Image(
                     student_admission_number=admission_number, image_data=image_data
@@ -55,13 +54,14 @@ def upload_image():
                 db.session.commit()
 
                 # Redirect back to the dashboard
-                return redirect(url_for("pages.dashboard"))
+                return redirect(url_for("pages.student_dashboard"))
 
             return jsonify({"error": "No file uploaded"}), 400
     except Exception as e:
         # Log or print the exception for debugging
         print(f"An error occurred: {str(e)}")
         return jsonify({"error": "File upload failed"}), 500
+
 
 
 
@@ -74,6 +74,8 @@ def view_image(image_id):
 
     else:
         return "Image not found", 404
+
+
 
 
 def get_latest_image_info(admission_number):

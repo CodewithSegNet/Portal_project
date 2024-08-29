@@ -5,8 +5,8 @@
 from app import db
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.dialects.postgresql import UUID
 import uuid
-
 
 
 # Association tables
@@ -22,7 +22,7 @@ notification_department = db.Table('notification_department',
 
 class Notification(db.Model):
     __tablename__ = "notifications"
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid7()), nullable=False)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     subject = db.Column(db.String(100), nullable=False)
     message = db.Column(db.String(255), nullable=False)

@@ -5,6 +5,7 @@ body, ul {
     list-style: none;
     text-transform: capitalize;
     overflow-x: hidden;
+    background-color: #f1efef;
   }
   
   /* Styles for the dashboard layout */
@@ -18,18 +19,27 @@ body, ul {
     color: #000;
   }
   
+  .aside-bar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    background-color: #fff;
+  }
+
+  .side-image {
+    width: 60px;
+    height: 60px;
+    }
 
   .profile-pic {
 	width: 150px;
-	height: 150px;
+	height: 200px;
   }
 
   /* Sidebar styles */
-  .sidebar {
-    width: 200px;
-    height: 1100px;
-    background-color: #f2f2f2;
-    transition: opacity 0.5s ease-in;
+  aside ul{
+  padding-top: 6rem;
   }
     
   .sidebar ul li a {
@@ -40,14 +50,22 @@ body, ul {
   .sidebar ul li a.active {
     font-weight: bold;
   }
+
+  .email-style{
+    color: #fff;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: larger;
+    font-weight: 600;
+    padding-right: 30px;
+  }
   
   /* Navbar styles */
   .navbar {
-    display: flex;
+    display:flex;
     justify-content: space-between;
+    padding: 20px 0;
     align-items: center;
-    padding: 20px;
-    background-color: #444;
+    background-color: #2d97c1;
     color: #fff;
     width: 100%;
   }
@@ -107,6 +125,13 @@ input[type="submit"] {
   border: none;
   border-radius: 3px;
   cursor: pointer;
+  border-radius: 30px;
+  
+}
+
+input[type="submit"].card{
+  border: none;
+  box-shadow: none;
 }
 
 input[type="submit"]:hover {
@@ -125,24 +150,38 @@ input[type="submit"]:hover {
   font-size: .8rem;
 }
 
+aside li{
+  width: 100%;
+}
+
+.aside-profile-image{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
+
+.aside-profile-image .card{
+  border: none;
+  box-shadow: none;
+}
+
 
 .dash-btn {
   display: block;
+  text-align: left;
   width: 100%;
   text-transform: capitalize;
+  background-color: #fff;
  
   padding: 10px 20px;
   font-weight: 500;
   box-shadow: none;
-  display: inline-block;
-  -webkit-transition: all 0.4s ease;
-  -moz-transition: all 0.4s ease;
-  transition: all 0.4s ease;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
+
   border: none;
-  border-radius: 0;
-  border-radius: 4px;
 }
 
 .dash-btn:hover {

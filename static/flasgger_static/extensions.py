@@ -9,11 +9,8 @@ api = Api(
     version='2.0',
     title='Sunnah College API',
     description='A School Portal API',
+    doc='/swagger-ui'
 )
-
-# Initialize other extensions
-db = SQLAlchemy()
-cache = Cache()
 
 
 # Create a Blueprint for the custom Swagger UI
@@ -23,6 +20,7 @@ swagger_blueprint = Blueprint('swagger', __name__, template_folder='templates')
 def swagger_ui():
     return render_template('swagger.html')
 
+
 def init_app(app):
     api.init_app(app)
-    app.register_blueprint(swagger_blueprint, url_prefix='/docs')
+    

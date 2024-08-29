@@ -22,11 +22,13 @@ logging.basicConfig(level=logging.DEBUG)
 pages_bp = Blueprint("pages", __name__, template_folder="templates")
 
 
+
+
 # Load environment variables from the .env file
 load_dotenv()
 
 
-@pages_bp.route("/home")
+@pages_bp.route("/")
 @cache.cached(timeout=500)
 def home():
     """

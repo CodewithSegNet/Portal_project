@@ -11,6 +11,9 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
+
 
 
 class Student(db.Model):

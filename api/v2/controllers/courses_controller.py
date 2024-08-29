@@ -2,22 +2,34 @@
 
 # Import
 from api.v2.models import (
-    Course
+    Student,
+    Department,
+    Semester,
+    Course,
+    Applicant,
 )
+from api.v2.models import Department
+from api.v2.models import Semester
+from api.v2.models.course_model import Course
+import api.v2.models.student_model
+
+from api.v2.models import Admin
+from api.v2.models import Applicant
+from api.v2.models import Image
 from app import db
 
 
 
 # /****************************************** COURSES ************************************************/
-
-
 def assign_courses(user, department_name, department_level, semester_name):
+    print(f"Assigning courses for {user.name}, {department_name} {department_level} {semester_name}")
 
     # Add specific courses for the department and department level to the new user
     if (
         department_name == "Pharmacy Technician"
         and department_level == 100
         and semester_name == "first"
+        
     ):
         course1 = Course(
             course_title="Anatomy and Physiology 1", course_code="GNP 111", credit=3
@@ -26,6 +38,8 @@ def assign_courses(user, department_name, department_level, semester_name):
             course_title="General and Physical Chemistry",
             course_code="BCH 111",
             credit=3,
+            student_id=user.admission_number
+
         )
         course3 = Course(
             course_title="Algebra and Elementary Trigonometry",
@@ -159,7 +173,8 @@ def assign_courses(user, department_name, department_level, semester_name):
                 course9,
             ]
         )
-
+        
+        return assigned_courses if assigned_courses else None
     # Pharmacy Technician 200 second semester
     if (
         department_name == "Pharmacy Technician"
@@ -937,24 +952,5 @@ def assign_courses(user, department_name, department_level, semester_name):
 
         # Assign the courses to the new user
         user.courses.extend([course1, course2, course3, course4, course5, course6])
-
-
-# /****************************************** END OF COURSES ************************************************/
-
-
-def add_courses_to_user(user, courses_data):
-    # Create and assign courses to the new user
-    for course_data in courses_data:
-        new_course = Course(
-            course_code=course_data["course_code"],
-            student_id=user.admission_number,
-            course_title=course_data["course_title"],
-            credit=course_data["credit"],
-            ca_score=None,
-            exam_score=None,
-            total_score=None,
-            grade=None,
-            remark=None,
-        )
-        db.session.add(new_course)
-        user.courses.append(new_course)
+        
+        db.session.commit()

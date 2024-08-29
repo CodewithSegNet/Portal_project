@@ -2,13 +2,13 @@
 
 # Import
 from app import db
+from sqlalchemy.dialects.postgresql import UUID
 import uuid
-
 
 
 class PaymentStatus(db.Model):
     __tablename__ = "payments"
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid7()), nullable=False)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()), nullable=False)
     is_paid = db.Column(db.Boolean, default=False)
     email = db.Column(db.String(255), db.ForeignKey('applicants.email'), nullable=False)
 

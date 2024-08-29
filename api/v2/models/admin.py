@@ -9,12 +9,13 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
 
 class Admin(db.Model):
     __tablename__ = "admins"
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid7()), nullable=False)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()), nullable=False)
     email = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)

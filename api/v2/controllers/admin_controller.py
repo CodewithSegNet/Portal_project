@@ -10,6 +10,7 @@ from datetime import datetime, timedelta
 from flask import (
     current_app,
     request,
+    Blueprint,
     jsonify,
     url_for,
     session,
@@ -45,6 +46,7 @@ from api.v2.models import (
 )
 
 from api.v2.controllers.images_controller import get_latest_image_info
+from api.v2.controllers.grade_controller import  StudentScoreForm
 
 # 3. Local Application Imports
 from app import db
@@ -52,87 +54,106 @@ from api.v2.models import (
     Student,
     Admin, 
 )
+from flask_restx import Namespace, Resource, fields
 from api.v2.controllers.homepage_controller import pages_bp
-from api.v2.controllers.student_controller import user_bp
 
 
+
+
+user_bp = Blueprint("user", __name__, template_folder="templates")
+admin_ns = Namespace('admins', description='admin related operations')
 
 # /****************************************** ADMINS ROUTES ************************************************/
-@user_bp.route("/admin/register", methods=["POST"])
-def register():
-    """
-    A function that handles admin registration
-    """
 
-    try:
-        data = request.json
-        existing_email = Student.query.filter_by(email=data["email"]).first()
+@admin_ns.route("/register")
+class AdminRegister(Resource):
+    def post(self):
+        """
+        A function that handles admin registration
+        """
 
-        if existing_email:
-            return jsonify({"error": "Email Already Exists!"}), 400
+        try:
+            data = request.json
+            existing_email = Admin.query.filter_by(email=data["email"]).first()
 
-        # Create a new user instance
-        new_user = Admin(
-            email=data["email"],
-            password=generate_password_hash(data["password"]),
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow(),
-        )
+            if existing_email:
+                return {"error": "Email Already Exists!"}, 400
 
-        db.session.add(new_user)
-        db.session.commit()
+            # Create a new user instance
+            new_user = Admin(
+                email=data["email"],
+                password=generate_password_hash(data["password"]),
+                created_at=datetime.utcnow(),
+                updated_at=datetime.utcnow(),
+            )
 
-        # Return JSON successful message if data's works
-        return jsonify({"message": "Admin Registration Successfully Created!"}), 201
+            db.session.add(new_user)
+            db.session.commit()
 
-    # Handles database issues (connection or constraint violation)
-    except SQLAlchemyError as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
+            # Return JSON successful message if data's works
+            return {"message": "Admin Registration Successfully Created!"}, 201
+
+        # Handles database issues (connection or constraint violation)
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return {"error": str(e)}, 500
 # /****************************************** END OF ADMINS ROUTES ************************************************/
 
 
 # /****************************************** ADMIN ROUTES ************************************************/
 
+# Define the API model for input validation
+login_model = admin_ns.model('Login', {
+    'email': fields.String(required=True, description='admin email'),
+    'password': fields.String(required=True, description='admin password')
+})
 
-@pages_bp.route("/admin", methods=["POST"])
-def admin():
-    """
-    A route that handles admin authentication
-    """
-    try:
-        email = request.form.get("email")
-        password = request.form.get("password")
 
-        if email is None or password is None:
-            return jsonify({"error": "Email and password are required."}), 400
+@admin_ns.route("/login")
+class AdminLogin(Resource):
+    @admin_ns.expect(login_model)
+    def post(self):
+        """
+        A route that handles admin authentication
+        """
+        try:
+            data = request.json
+            email = data.get("email")
+            password = data.get("password")
 
-        user = Admin.query.filter_by(email=email).first()
-        if user and user.check_password(password):
-            """
-            Create a JWT token
-            """
-            token = jwt.encode(
-                {
-                    "admin_user_id": user.email,
-                    "exp": datetime.utcnow()
-                    + timedelta(hours=2),  # Token expiration time
-                },
-                "secret_key",
-                algorithm="HS256",
-            )
+            if email is None or password is None:
+                return {"error": "Email and password are required."}, 400
 
-            session["admin_token"] = token  # Store the token in the session
-            session["admin_user_id"] = user.email  # Store user ID in the session
+            user = Admin.query.filter_by(email=email).first()
+            if user and user.check_password(password):
+                """
+                Create a JWT token
+                """
+                token = jwt.encode(
+                    {
+                        "admin_user_id": user.email,
+                        "exp": datetime.utcnow()
+                        + timedelta(hours=2),  
+                    },
+                    "secret_key",
+                    algorithm="HS256",
+                )
+                
+                response = {
+                    'token': token,
+                    'admin_user_id': user.email
+                }
+            
+                session["admin_token"] = token  
+                session["admin_user_id"] = user.email 
 
-            return redirect(url_for("pages.admindash"))
-        else:
-            flash("Incorrect email or password. Please try agin.", "danger")
-            return redirect(url_for("pages.signinadmin"))
-    except Exception as e:
-        traceback.print_exc()
-        flash(f"An error occurred: {str(e)}", "danger"), 500
-        return redirect(url_for("pages.signinadmin"))
+                return response, 200
+            else:
+                flash("Incorrect email or password. Please try agin.", "danger")
+                return{'message': 'Invalid Credential'}, 401
+        except Exception as e:
+            logging.error(f"An error occurred: {str(e)}")
+            return{'message': f'An error occured: {str(e)}'}, 500
 
 
 # authenticate and authorize requests using JWT
@@ -181,7 +202,7 @@ def make_authorized_request(url, method="GET", data=None, token=None):
 # /****************************************** END OF  ADMIN ROUTES ************************************************/
 
 
-@pages_bp.route("/admin/dashboard", methods=["GET"])
+@pages_bp.route("/admins/dashboard", methods=["GET"])
 def admin_dashboard():
     if "admin_user_id" in session:
         email = session.get("admin_user_id")
@@ -209,7 +230,7 @@ def admin_dashboard():
             # Get image information
             image_info = get_latest_image_info(student_info.get("admission_number"))
 
-        image1 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunnahlogo.avif")
+        image1 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
 
         form = StudentScoreForm()
 

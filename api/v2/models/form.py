@@ -6,14 +6,14 @@ import api.v2.models.applicant
 from api.v2.models.form_image import FormImage
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.dialects.postgresql import UUID
 import uuid
-
 
 
 class AdmissionForm(db.Model):
 
     __tablename__ = "admission_forms"
-    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid7()), nullable=False)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()), nullable=False)
     form_number = db.Column(db.String(255), db.ForeignKey("applicants.email"))
     fullnames = db.Column(db.String(100), nullable=True)
     contactaddress = db.Column(db.String(200), nullable=True)
@@ -122,13 +122,6 @@ class AdmissionForm(db.Model):
 
     # Relationship with images
     photograph = db.relationship("FormImage", backref="applicant_number", lazy=True)
-
-    # Define the relationship with Applicant
-    applicant = db.relationship(
-        "Applicant",
-        back_populates="applicant_number",
-        overlaps="admission_forms, applicant",
-    )
 
     def update(self, **kwargs):
         for key, value in kwargs.items():
