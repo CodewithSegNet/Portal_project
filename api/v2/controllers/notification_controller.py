@@ -41,33 +41,37 @@ from api.v2.models import (
     Notification
 )
 from app import cache, db
-from views import *
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from werkzeug.exceptions import Forbidden
 from api.v2.controllers.admin_controller import admin_ns, login_model
 from flask_restx import Namespace, Resource, fields
 
 
-@admin_ns.route('/notifications')
-class Notification(Resource):
-    @admin_ns.expect(login_model)
+# Define the Namespace for the student API
+notification_ns = Namespace('notification', description='notification related operations')
+
+
+
+@notification_ns.route('/')
+class Notifications(Resource):
+    @jwt_required()  
     def post(self):
         """
         An Endpoint to send notifications to student
         """
         
         admin_id = get_jwt_identity()
-        admin = Admin.query.get(admin_id)
+        admin = Admin.query.filter_by(email=admin_id).first()
         
         if not admin:
             raise Forbidden("You are not authorized to perform this action.")
         
         
         data = request.get_json()
-        
-        # validate input
-        if not all(key in data for key in ['name', 'subject', 'messages', 'semesters', 'department_name', 'department_level']):
-            return jsonify({"success": False, "message": "Missing required fields"}), 400
+
+        # Validate input
+        if not all(key in data for key in ['name', 'subject', 'message']):
+            return {"success": False, "message": "Missing required fields"}, 400
         
         # Create the notification
         notification = Notification(
@@ -75,26 +79,79 @@ class Notification(Resource):
             subject=data['subject'],
             message=data['message']
         )
+        
+        # Add related semesters if provided
+        if 'semesters' in data:
+            for semester_id in data['semesters']:
+                semester = Semester.query.get(semester_id)
+                if semester:
+                    notification.semesters.append(semester)
+        
+        # Add related departments if provided
+        if 'department_name' in data:
+            for department_id in data['department_name']:
+                department = Department.query.get(department_id)
+                if department:
+                    notification.departments.append(department)
 
-        # Add related semesters
-        for semester_id in data['semesters']:
-            semester = Semester.query.get(semester_id)
-            if semester:
+        # Handle sending to specific department based on name and level
+        if 'department_name' in data and 'department_level' in data:
+            departments = Department.query.filter_by(
+                department_name=data['department_name'],
+                department_level=data['department_level']
+            ).all()
+            for department in departments:
+                notification.departments.append(department)
+                
+        if 'semesters' in data:
+            semester = Semester.query.filter_by(
+                semester = data['semesters']
+            ).all()
+            for semester in semester:
                 notification.semesters.append(semester)
 
-        # Add related departments
-        for department_id in data['department_name']:
-            department = Department.query.get(department_id)
-            if department:
-                notification.departments.append(department)
+        # Handle sending to all students in provided semesters
+        if 'semesters' in data:
+            for semester_id in data['semesters']:
+                students = Student.query.join(Student.semesters).filter(Semester.id == id).all()
+                for student in students:
+                    notification.students.append(student)
+        
+        # Handle sending to all students in a specific department
+        if 'department_name' in data:
+            students = Student.query.filter_by(department_name=data['department_name']).all()
+            for student in students:
+                notification.students.append(student)
+
+        # Handle sending to everybody
+        if data.get('send_to_everybody', False):
+            all_students = Student.query.all()
+            notification.students.extend(all_students)
 
         # Save the notification to the database
         db.session.add(notification)
         db.session.commit()
 
-        return jsonify({"success": True, "message": "Notification sent successfully"}), 201 
-        
-        
-        
-        
-        
+        return {"success": True, "message": "Notification sent successfully"}, 201
+    
+    
+    
+@notification_ns.route('/')
+class NotificationList(Resource):
+    @jwt_required()
+    def get(self):
+        """
+        Endpoint to retrieve paginated notifications.
+        """
+        page = request.args.get('page', 1, type=int)
+        per_page = 10  # Number of notifications per page
+
+        # Retrieve paginated notifications from the database
+        notifications = Notification.query.paginate(page=page, per_page=per_page, error_out=False)
+
+        return render_template(
+            'notifications.html',
+            notifications=notifications.items,
+            page=page,
+            total_pages=notifications.pages
+        )

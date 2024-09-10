@@ -26,6 +26,9 @@ from app import db
 
 
 
+def allowed_file(filename):
+    allowed_extensions = {"png", "jpg", "jpeg", "gif"}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
 
@@ -34,6 +37,7 @@ from app import db
 def upload_image():
     try:
         if "user_id" in session:
+            print("Request files:", request.files)
             admission_number = session.get("user_id")
             token = session.get("token")
 
@@ -46,6 +50,7 @@ def upload_image():
                 filename = file.filename
                 image_data = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
                 file.save(image_data)
+
                 # Create a new image record and associate it with the student
                 image = Image(
                     student_admission_number=admission_number, image_data=image_data

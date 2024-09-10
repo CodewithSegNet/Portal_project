@@ -36,6 +36,7 @@ from sqlalchemy.exc import SQLAlchemyError
 import os
 import pymysql
 from MySQLdb import OperationalError
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from dotenv import load_dotenv
 import time
 import traceback
@@ -129,22 +130,15 @@ class AdminLogin(Resource):
                 """
                 Create a JWT token
                 """
-                token = jwt.encode(
-                    {
-                        "admin_user_id": user.email,
-                        "exp": datetime.utcnow()
-                        + timedelta(hours=2),  
-                    },
-                    "secret_key",
-                    algorithm="HS256",
-                )
+                access_token = create_access_token(identity=user.email, expires_delta=timedelta(hours=2))
+
                 
                 response = {
-                    'token': token,
+                    'token': access_token,
                     'admin_user_id': user.email
                 }
             
-                session["admin_token"] = token  
+                session["admin_token"] = access_token  
                 session["admin_user_id"] = user.email 
 
                 return response, 200

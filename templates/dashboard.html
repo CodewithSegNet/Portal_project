@@ -38,6 +38,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/magnific-popup.css')}}">
 		
 		<!-- Medipro CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css')}}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css')}}">
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
@@ -51,21 +52,21 @@
 
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+
 
   <div class="dashboard">
     <!-- Sidebar -->
     <aside class="sidebar">
 
+      <div class="aside-image">
+
+        <img src={{user_image}}>
+        <!-- <span>Hello, {{ student.name }}</span> -->
+      <span class="aside-logo-name">Braham College of Health</span>
+
+      </div>
    
-      <ul class="aside-bar">
+      <ul class="aside-bar menu" id="menu">
         <div class="aside-profile-image">
           {% if user_image_path %}
             <img src="{{ user_image_path }}" alt="Profile Picture" class="img-fluid rounded-circle side-image" id="profileImage">
@@ -79,8 +80,7 @@
             </form>
           </div>
         </div>
-
-        <li><a href="#" class="dash-btn sidebar-item active" data-content="dashboard"><i class="icofont-home"></i> Dashboard</a></li>
+  <li><a href="#" class="dash-btn sidebar-item active" data-content="dashboard"><i class="icofont-home"></i> Dashboard</a></li>
         <li><a href="#" class="dash-btn sidebar-item" data-content="transcript"><i class="icofont-certificate-alt-1"></i> Transcript</a></li>
         <li><a href="#" class="dash-btn sidebar-item" data-content="certification"><i class="icofont-learn"></i> Certification</a></li>
         <li><a href="#" class="dash-btn sidebar-item" data-content="settings"><i class="icofont-settings-alt">
@@ -98,24 +98,33 @@
     <main class="main-content">
        <!-- Nav -->
        <nav class="navbar">
-        <div class="navbar__left">
-          <img src={{user_image}}>
-          <!-- <span>Hello, {{ student.name }}</span> -->
-        <span>Braham College of Health</span>
-        </div>
+        <div class="welcome">
+      <div class="welcome-student"> Welcome Back, {{ student.name }}!  </div>
+
+      </div>
+
+
+
+
+      
+      
         <div class="navbar__right d-flex align-items-center justify-content-between">
           <div class="navbar__burger">
             <i class="icofont-navigation-menu"></i> 
-
+  
           </div>
 
         </div>
-
-        <p class="email-style">Email:  <span class="email-style">{{ student.email }} </span></p>
       </nav>
 
+      <hr class="welcome-hr">
+
+
       <div id="dashboard" class="content-section">
-        <div class="dashboard_container container mt-4">
+
+        
+        <div class="dashboard_container container">
+
           <div class="row">
             <div class="col-md-12 col-lg-5">
               <div class="card">
@@ -135,59 +144,76 @@
                     <p class="black">Gender: <span class="response">{{ student.gender }} </span></p>
                     <hr class="mb-2 mt-0">
 
-                    <p class="black">Date of Birth: <span class="response">{{ student.date_of_birth }} </span></p>
+                    <p class="black">Date of Birth: <span class="response">{{ student.date_of_birth.strftime('%B %d, %Y') }} </span></p>
                     <hr class="mb-2 mt-0">
 
                     <p class="black">Phone Number: <span class="response"> {{ student.phone_number}}</span></p>
                     <!-- <hr class="mb-2 mt-0"> -->
 
                   </div>
-
-              
+                </div>
                 </div>
 
 
-               
-             
-              </div>
+          
+                
+              
 
 
-
-              <div class="card mt-4">
+              <div class="notification-card card mt-4">
                 <div class="card-body card-responsive card-shape">
-                  {% if user_image_path %}
-                  <img src="{{ user_image_path }}" alt="Profile Picture" class="img-fluid rounded-circle profile-pic">
-                  {% endif %}
-                  <div class="text-left student-card w-100 ">
-                <h6 class="mt-3">Name: <span class="response"> {{ student.name }} </span></h6>
-                <hr class="mb-2 mt-0">
-                    <p class="black"> Admission Number: <span class="response">  {{ student.admission_number }} </span></p>
-                    <hr class="mb-2 mt-0">
+                    <div class="notifications-section">
 
-                    <p class="black">State: <span class="response">  {{ student.state }} </span></p>
-                    <hr class="mb-2 mt-0">
+                      <div class="d-flex w-100 align-items-center justify-content-between">
+                        <h5 class="pb-3">Notifications:</h5>
+                        <a class="pb-3 sidebar-item" data-content="notifications" style="color: blue;" href>View All</a>
+                      </div>
+                      
 
-                    <p class="black">Gender: <span class="response">{{ student.gender }} </span></p>
-                    <hr class="mb-2 mt-0">
-
-                    <p class="black">Date of Birth: <span class="response">{{ student.date_of_birth }} </span></p>
-                    <hr class="mb-2 mt-0">
-
-                    <p class="black">Phone Number: <span class="response"> {{ student.phone_number}}</span></p>
-                    <!-- <hr class="mb-2 mt-0"> -->
-
-                  </div>
-
-              
+                        <div>
+                          {% if notifications_dashboard %}
+                          {% for notification in notifications_dashboard %}
+                              <div class="notification-item p-1 px-3 border rounded {% if loop.index == 3 %}no-mb{% else %}mb-3{% endif %}">
+                                  <div class="status-indicator">
+                                      {% if not notification.is_read %}
+                                      <i class="fas fa-circle red-dot"></i>
+                                      {% endif %}
+                                  </div>
+                                  <div class="d-flex pb-1 justify-content-between align-items-center">
+                                      <h6 class="font-weight-600">{{ notification.name }}</h6>
+                                      <p>{{ notification.created_at.strftime('%B %d, %Y') }}</p>
+                                  </div>
+                                  <div class="message-box">
+                                      <p class="d-flex align-items-center">
+                                          <strong class="pr-2">Message: </strong> 
+                                          {{ notification.message|truncate(55, True, '...') }}
+                                      </p>
+                                      <a class="view-message-link" 
+                                      href="#" 
+                                      style="color: blue;" 
+                                      data-topic="{{ notification.name }}" 
+                                      data-date="{{ notification.created_at.strftime('%B %d, %Y') }}" 
+                                      data-message="{{ notification.message }}">View</a>                                    </div>
+                              </div>
+                          {% endfor %}
+                      {% else %}
+                          <p>No notifications available.</p>
+                      {% endif %}
+                        </div>
+                    </div>
                 </div>
+            </div>
+            
 
 
-               
-             
-              </div>
+            
+            
               
       
             </div>
+
+
+      
 
 
 
@@ -250,40 +276,42 @@
         </div>
       </div>
 
-
       <div id="transcript" class="content-section", style="display: none;">
      
         <!-- Assuming this is within the section where you want to display student information -->
 <div class="row mb-4">
   <div class="col-md-12">
       <div class="">
-          <div class="card-body">
-              <h4>Student Transcript</h4>
-              <hr>
+          <div class="card-body dashboard-second-display">
+              <!-- <h4>Student Transcript</h4> -->
               <div class="row">
-                <div class="w-100 d-flex align-items-center justify-content-center">
+                <!-- <div class="w-100 d-flex align-items-center justify-content-center">
                   <img class="profile-pic d-flex align-items-center" src={{user_image}}>
-                </div>
-                <div class="pb-4 pl-4 pr-4">
-                  <h4 class="text-center pt-2">
-                    BRAHAM COLLEGE OF HEALTH & SCIEENCE TECHOLOGY MARARABA-GURKU, KARU L.G.A OF NASARAWA STATE
+                </div> -->
+                <div class="pb-3 pl-4 pr-4">
+                  <h4 class="text-center pt-1">
+                    BRAHAM COLLEGE OF HEALTH & SCIENCE TECHOLOGY MARARABA-GURKU, KARU L.G.A OF NASARAWA STATE
                   </h4>
                 </div>
                 <hr>
 
                 <div class="card-credential col-md-12">
-                  <div class="col-md-6">
+                  <div class="col-md-4">
                     <p><strong>Admission Number:</strong> {{ student.admission_number }}</p>
-                    <p><strong>Name:</strong> {{ student.name }}</p>
-                    <p><strong>Date of Birth:</strong> {{ student.date_of_birth }}</p>
-                    <!-- Add other student details here... -->
-                </div>
-                <div class="col-md-5 ">
-                    <p><strong>Email:</strong> {{ student.email }}</p>
-                    <p><strong>Phone Number:</strong> {{ student.phone_number }}</p>
                     <p><strong>Department:</strong> {{ student.department_name }}</p>
                     <!-- Add other student details here... -->
                 </div>
+                <div class="col-md-4">
+                  <p><strong>Name:</strong> {{ student.name }}</p>
+                    <p><strong>Email:</strong> {{ student.email }}</p>
+                    <!-- Add other student details here... -->
+                </div>
+
+                <div class="col-md-4">
+                  <p><strong>Date of Birth:</strong> {{ student.date_of_birth.strftime('%B %d, %Y')  }}</p>
+                  <p><strong>Phone Number:</strong> {{ student.phone_number }}</p>
+                  <!-- Add other student details here... -->
+              </div>
                 </div>
                  
               </div>
@@ -300,7 +328,7 @@
           
 
                <!-- Course Details Section -->
-               <div class="row pt-4 mx-1">
+               <div class="row mx-1">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
@@ -328,8 +356,8 @@
                         <p>No department levels found.</p>
                     {% endif %}
                         </div>
-                            <hr>
-                            <table class="course_table table-bordered text-center  table-responsive-991">
+                            <hr class="mt-0">
+                            <table class="course_table table-bordered text-center mb-0  table-responsive-991">
                                 <thead class="table-head">
                                     <tr class="table-row">
                                         <th>Course Code</th>
@@ -375,14 +403,15 @@
       
       <div id="certification" class="content-section" style="display: none;">
         <section class="container">
+
           <div class="row px-4">
             <article>
-                <h1 class="pt-4">Certification</h1>
-<div class="pt-4">
+                <h4>Certification</h4>
+<div class="pt-2">
     <p>At the end of the programme, the certificate awarded is a Diploma in Community Health</p>
 <br>
 <span class="black">condition for award of certificate</span>
-<p class="pb-5"> The final professional and Practice Licensing examination shall be organized and conducted by community health
+<p class="pb-3"> The final professional and Practice Licensing examination shall be organized and conducted by community health
      practitioners registration board of nigeria (CHPRBN) based on their prescribed structue.
      Research project shall be supervised by the training institution and assessed by the board.</p>
 
@@ -522,6 +551,111 @@
             </section>
           </div>
 
+
+
+
+
+
+       <!-- Message Section -->
+<div id="message" class="content-section" style="display: none;">
+  <section class="container">
+      <div class="row d-flex align-items-center justify-content-center">
+          <div class="w-100">
+              <h2 class="mx-3 pb-3">Message</h2>
+              <div class="card mx-3">
+                 <div id="full-message-content" class="message-content">
+                  <div class="d-flex align-items-center justify-content-between pb-3">
+                    <h6 id="message-topic" class="font-weight-600"></h6>
+                    <p id="message-date"></p>
+                  </div>
+                
+                        <p id="message-body"></p>
+                </div>
+              </div>
+              
+              <button class="mt-3 mx-3" onclick="hideMessage()" style="color: blue;">Back to Notifications</button>
+          </div>
+      </div>
+  </section>
+</div>
+
+
+
+
+
+
+
+
+
+          <div id="notifications" class="content-section" style="display: none;">
+            <section class="container">
+              <hr class="mt-1">
+
+
+
+              <section class="container">
+                <div class="row d-flex align-items-center justify-content-center">
+                
+
+<div class="w-100">
+  <h2 class="pb-3">All Notifications</h2>
+
+  <ol class="">
+      {% for notification in notifications_all %}
+      <div class="notification-item all-notification p-1 px-3 border rounded p-1 px-3 border rounded {% if loop.index == 6 %}no-mb{% else %}mb-3{% endif %}">
+        <div class="status-indicator">
+            {% if not notification.is_read %}
+            <i class="fas fa-circle red-dot"></i>
+            {% endif %}
+        </div>
+        <div class="d-flex pb-1 justify-content-between align-items-center">
+            <h6 class="font-weight-600">{{ notification.name }}</h6>
+            <p>{{ notification.created_at.strftime('%B %d, %Y') }}</p>
+        </div>
+        <div class="message-box">
+            <p class="d-flex align-items-center">
+                <strong class="pr-2">Message: </strong> 
+                {{ notification.message|truncate(80, True, '...') }}
+            </p>
+            <a style="color: blue;" 
+            href="#" 
+            class="view-message-link" 
+            data-topic="{{ notification.name }}" 
+            data-date="{{ notification.created_at.strftime('%B %d, %Y') }}" 
+            data-message="{{ notification.message }}">View</a>
+                    </div>
+    </div>
+      {% endfor %}
+  </ol>
+
+  <div class="pagination">
+    {% if has_prev %}
+        <a href="#notifications" class="pagination-link" data-page="{{ prev_page }}">Prev</a>
+    {% else %}
+        <a class="disabled">Prev</a>
+    {% endif %}
+
+    <span>Page {{ page }} of {{ pages }}</span>
+
+    {% if has_next %}
+        <a href="#notifications" class="pagination-link" data-page="{{ next_page }}">Next</a>
+    {% else %}
+        <a class="disabled">Next</a>
+    {% endif %}
+</div>
+  
+</div>
+
+               
+
+    
+                    </div>
+
+
+   
+
+
+
       </div>
     </div>
 
@@ -532,30 +666,16 @@
 
 
 
-<script>
-  const profileImage = document.getElementById('profileImage');
-  const fileInput = document.getElementById('fileInput');
-
-  profileImage.addEventListener('click', () => {
-    fileInput.click();  // Trigger file input click
-  });
-
-  // Optional: Update the image preview after selection
-  fileInput.addEventListener('change', (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        profileImage.src = e.target.result;  // Update the profile image with the selected file
-      }
-      reader.readAsDataURL(file);
-    }
-  });
-</script>
 
 <!-- jquery Min JS -->
 <!-- Include jQuery before other scripts using it -->
-<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+ <!-- Popper.js from CDN -->
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/slicknav/1.0.10/jquery.slicknav.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="{{ url_for('static', filename='js/new.js') }}"></script>
+
 
 
 <!-- Include your other scripts -->

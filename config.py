@@ -5,6 +5,7 @@
 import os
 from dotenv import load_dotenv
 import pymysql
+from datetime import timedelta
 
 # Load environment variables from the .env file
 load_dotenv()
@@ -44,6 +45,11 @@ class Config:
     # Flask-Caching configuration
     CACHE_TYPE = "simple"
     CACHE_DEFAULT_TIMEOUT = 300
+    
+    
+     # JWT Configuration
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'your_default_secret_key')
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=2)
 
 
 class DevelopmentConfig(Config):

@@ -227,6 +227,7 @@ def get_student_info():
             student_info["semesters"] = [
                 {"semester": semester.semester} for semester in student.semesters
             ]
+            
 
         encoded_student_info = quote(json.dumps(student_info))
 
@@ -315,7 +316,7 @@ class Register(Resource):
                     new_semester = Semester(semester=semester_name)
                     new_user.semesters.append(new_semester)
                     db.session.add(new_semester)
-                    db.session.commit()  # Commit changes after creating a new semester
+                    db.session.commit() 
                 else:
                     new_user.semesters.append(semester)
 
@@ -437,13 +438,30 @@ def student_dashboard():
     token = session.get("token") or request.args.get('token')
 
     if not admission_number or not token:
-        return render_template("unauthorized.html"), 401
+        return render_template("signin_student.html"), 401
+    
 
     current_user = Student.query.get(admission_number)
     courses = current_user.courses
     departments = current_user.departments
     semesters = current_user.semesters
     images = current_user.images
+    
+    # Fetch notifications for the student
+    page = request.args.get('page', 1, type=int)
+    per_page_all = 6  
+    
+    notifications_query = (Notification.query
+                           .join(Notification.students)
+                           .filter(Student.id == current_user.id)
+                           .order_by(Notification.created_at.desc()))
+    
+    # For displaying only two notifications on the dashboard
+    notifications_dashboard = notifications_query.limit(2).all()
+    
+    # For displaying all notifications in the "View All" section
+    notifications_paginated = notifications_query.paginate(page=page, per_page=per_page_all, error_out=False)
+    notifications_all = notifications_paginated.items
 
     # Encode admission number
     encoded_admission_number = current_user.admission_number.replace("/", "%2F")
@@ -459,7 +477,18 @@ def student_dashboard():
         user_image=image1,
         user_image_path=user_image_path,
         images=images,
+        notifications_dashboard=notifications_dashboard, 
+        notifications_all=notifications_all,
+        page=page,
+        per_page=per_page_all,
+        total=notifications_paginated.total,
+        pages=notifications_paginated.pages,
+        has_next=notifications_paginated.has_next,
+        has_prev=notifications_paginated.has_prev,
+        next_page=notifications_paginated.next_num,
+        prev_page=notifications_paginated.prev_num,
     )
+    
     
     
     
@@ -492,3 +521,44 @@ def get_image():
 
     # Handle case where admission_number is not provided or image not found
     return jsonify({"error": "Image not found"}), 404
+
+
+
+
+
+
+
+
+@pages_bp.route("/students/notifications", methods=['GET'])
+def notification_list():
+    """
+    Renders the notifications page with pagination.
+    """
+    # Retrieve admission number from session or request args
+    admission_number = session.get("user_id") or request.args.get('admission_number')
+
+    current_user = Student.query.get(admission_number)
+
+    # Fetch all notifications with pagination
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)  
+
+    notifications_query = (Notification.query
+                           .join(Notification.students)
+                           .filter(Student.id == current_user.id)
+                           .order_by(Notification.created_at.desc()))
+    notifications_paginated = notifications_query.paginate(page=page, per_page=per_page, error_out=False)
+    notifications = notifications_paginated.items
+
+    return render_template(
+        "notifications.html",
+        notifications=notifications,
+        page=page,
+        per_page=per_page,
+        total=notifications_paginated.total,
+        pages=notifications_paginated.pages,
+        has_next=notifications_paginated.has_next,
+        has_prev=notifications_paginated.has_prev,
+        next_page=notifications_paginated.next_num,
+        prev_page=notifications_paginated.prev_num,
+    )

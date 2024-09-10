@@ -38,7 +38,7 @@ def home():
     image1 = os.path.join(current_app.config["UPLOAD_FOLDER"], "section-img.png")
     image2 = os.path.join(current_app.config["UPLOAD_FOLDER"], "slider.jpg")
     image3 = os.path.join(current_app.config["UPLOAD_FOLDER"], "student.webp")
-    image4 = os.path.join(current_app.config["UPLOAD_FOLDER"], "logo_2.webp")
+    image4 = os.path.join(current_app.config["UPLOAD_FOLDER"], "logo_2.avif")
     image5 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunPics1.webp")
     image6 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunPics2.webp")
     # image7 = os.path.join(app.config['UPLOAD_FOLDER'], 'icon-close.svg')

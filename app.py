@@ -8,6 +8,7 @@ from flask_caching import Cache
 from decouple import config
 from flask_cors import CORS
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
 from flask_compress import Compress
 from static.flasgger_static.extensions import api, init_app, swagger_blueprint
 import os
@@ -21,11 +22,13 @@ def create_app():
     # create an instance of the flask app
     app = Flask(__name__)
     
-   
-
     # Load configuration from Config class
     app.config.from_object(Config)
 
+
+    # Initialize JWT Manager
+    jwt = JWTManager(app)
+    
     # Initialize Flask-caching
     cache.init_app(app)
     
@@ -59,6 +62,9 @@ def create_app():
     
     from api.v2.controllers.admin_controller import admin_ns
     api.add_namespace(admin_ns, path='/api/v2/admins')
+    
+    from api.v2.controllers.notification_controller import notification_ns
+    api.add_namespace(notification_ns, path='/api/v2/notifications')
     
     
     from api.v2.controllers import register_blueprints

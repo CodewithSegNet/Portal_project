@@ -16,6 +16,26 @@ body {
   }
 
 
+  .password-container {
+    position: relative;
+  }
+  
+  #password {
+    padding-right: 30px;
+  }
+  
+  #togglePassword {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-45%);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 10%;
+  }
+  
+
 
   
   h2 {
@@ -124,7 +144,7 @@ p{
   
   
   .home a:hover{
-    color: #c9a768;
+    color: #00A0E3;
     text-decoration: underline;
   }
 

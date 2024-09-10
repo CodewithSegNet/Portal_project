@@ -35,8 +35,8 @@ def contact():
     A Route thats handles the StudentSignIn
     """
 
-    image1 = os.path.join(current_app.config["UPLOAD_FOLDER"], "section-img.png")
-    image4 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunnahlogo.avif")
+    image1 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
 
     return render_template("contact.html", user_image=image1, user_image4=image4)
 
@@ -48,7 +48,7 @@ def admission():
     A Route thats handles the admission page
     """
 
-    image4 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunnahlogo.avif")
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
 
     return render_template("admission.html", user_image4=image4)
 
@@ -60,7 +60,7 @@ def history():
     A Route thats handles the history page
     """
 
-    image4 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunnahlogo.avif")
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
 
     return render_template("history.html", user_image4=image4)
 
@@ -72,7 +72,7 @@ def vision():
     A Route thats handles the vision page
     """
 
-    image4 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunnahlogo.avif")
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
 
     return render_template("vision.html", user_image4=image4)
 
@@ -84,7 +84,7 @@ def programmes():
     A Route thats handles the programmes page
     """
 
-    image4 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunnahlogo.avif")
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
 
     return render_template("programmes.html", user_image4=image4)
 
@@ -95,7 +95,7 @@ def application():
     """
     A Route thats handles the application page
     """
-    image4 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunnahlogo.avif")
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
 
     return render_template("application.html", user_image4=image4)
 
@@ -106,9 +106,8 @@ def form():
     """
     A Route thats handles the application page
     """
-    image4 = os.path.join(
-        current_app.config["UPLOAD_FOLDER"], "sunnah_college_logo-removebg-preview.png"
-    )
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
+
 
     return render_template("application_form.html", user_image=image4)
 
@@ -119,7 +118,7 @@ def not_found():
     """
     A Route thats handles the 404 page
     """
-    image4 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunnahlogo.avif")
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
 
     return render_template("404.html", user_image4=image4)
 
@@ -130,9 +129,8 @@ def applicant():
     """
     A Route thats handles the application page
     """
-    image4 = os.path.join(
-        current_app.config["UPLOAD_FOLDER"], "sunnah_college_logo-removebg-preview.png"
-    )
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
+
 
     return render_template("applicant.html", user_image4=image4)
 
@@ -142,9 +140,8 @@ def applicant_login():
     """
     A Route thats handles the application page
     """
-    image4 = os.path.join(
-        current_app.config["UPLOAD_FOLDER"], "sunnah_college_logo-removebg-preview.png"
-    )
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
+
 
     return render_template("applicant_login_page.html", user_image4=image4)
 
@@ -154,9 +151,8 @@ def super_admin_login():
     """
     A Route thats handles the application page
     """
-    image4 = os.path.join(
-        current_app.config["UPLOAD_FOLDER"], "sunnah_college_logo-removebg-preview.png"
-    )
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
+
 
     return render_template("special.html", user_image4=image4)
 
@@ -182,7 +178,7 @@ def successful_page():
     """
     A Route thats handles the application page
     """
-    image4 = os.path.join(current_app.config["UPLOAD_FOLDER"], "sunnahlogo.avif")
+    image4 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
 
     return render_template("successful_page.html", user_image4=image4)
 

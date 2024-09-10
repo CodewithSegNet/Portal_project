@@ -32,9 +32,9 @@
 				"telephone": "+234-8082-147-327",
 				"contactType": "Customer Service"
 			  },
-			  "image": "https://sunnahhealthcollege.com/static/img/sunnah_college_logo-removebg-preview.png",
+			  "image": "https://Brahamhealthcollege.com/static/img/sunnah_college_logo-removebg-preview.png",
 			  "description": "Welcome to Braham College of Health, Science and Technology. Our institution is committed to delivering a comprehensive and enriching learning experience that empowers students to thrive in their chosen fields. An educational institution providing top-notch health science education in Nasarawa.",
-			  "url": "https://www.sunnahhealthcollege.com"
+			  "url": "https://www.Brahamhealthcollege.com"
 			}
 			</script>
 
@@ -71,9 +71,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css')}}">
 		
-		<script src="{{ url_for('static', filename='js/jquery.min.js') }}" async></script>
-        <script src="{{ url_for('static', filename='js/jquery-migrate-3.0.0.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+
     </head>
     <body>
 	
@@ -373,7 +371,7 @@
 		<!-- Start Fun-facts -->
 		<div id="fun-facts" class="fun-facts section overlay">
 			<div class="container">
-				<div class="row">
+				<div class="row count">
 					<div class="col-lg-3 col-md-6 col-12">
 						<!-- Start Single Fun -->
 						<div class="single-fun">
@@ -616,45 +614,17 @@
 			</div>
 			<!--/ End Copyright -->
 		</footer>
-		<!--/ End Footer Area -->
-		<script>
-			window.addEventListener('load', function() {
-				document.querySelector('.preloader').style.display = 'none';
-			});
-		</script>
-		
 
-		<script>
-			$(document).ready(function () {
-				$('.newsletter-inner').submit(function (e) {
-					e.preventDefault(); // Prevent form submission
-					var formData = {
-						email: $(this).find('.common-input').val()
-					};
-					var url = $(this).attr('action'); // Get the form's action URL
-					$.ajax({
-						type: 'POST',
-						url: url,
-						contentType: 'application/json',
-						data: JSON.stringify(formData),
-						success: function (response) {
-							// Handle success response
-							alert(response.message);
-							location.reload(); // Reload the page
-						},
-						error: function (xhr, status, error) {
-							// Handle error response
-							console.error(error);
-							alert("An error occurred while sending your message. Please try again later.");
-						}
-					});
-				});
-			});
-		</script>
+		<script src="{{ url_for('static', filename='js/jquery.min.js') }}" async></script>
+        <script src="{{ url_for('static', filename='js/jquery-migrate-3.0.0.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+		<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+
+		
 
 		
 		<!-- jquery Min JS -->
-       
+		<script src="{{ url_for('static', filename='js/new.js') }}"></script>
         <script src="{{ url_for('static', filename='js/easing.js') }}"></script>
         <script src="{{ url_for('static', filename='js/colors.js') }}"></script>
         <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>

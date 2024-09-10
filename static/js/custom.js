@@ -1,6 +1,9 @@
+
+
+
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('signInForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the default form submission
+        event.preventDefault();
 
         const admissionNumber = document.getElementById('admission_number').value;
         const password = document.getElementById('password').value;
