@@ -32,9 +32,9 @@
 				"telephone": "+234-8082-147-327",
 				"contactType": "Customer Service"
 			  },
-			  "image": "https://sunnahhealthcollege.com/static/img/sunnah_college_logo-removebg-preview.png",
+			  "image": "https://Brahamhealthcollege.com/static/img/sunnah_college_logo-removebg-preview.png",
 			  "description": "Welcome to Braham College of Health, Science and Technology. Our institution is committed to delivering a comprehensive and enriching learning experience that empowers students to thrive in their chosen fields. An educational institution providing top-notch health science education in Nasarawa.",
-			  "url": "https://www.sunnahhealthcollege.com"
+			  "url": "https://www.Brahamhealthcollege.com"
 			}
 			</script>
 
@@ -71,6 +71,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css')}}">
 		
+
     </head>
     <body>
 	
@@ -162,7 +163,7 @@
 
 											<li><a href="{{ url_for('pages.contact') }}"  alt="contact us" aria-label="page to contact us">Contact Us</a></li>
 
-											<a href="{{ url_for('pages.signinstudent') }}" class="mobile-btn"  alt="student portal" aria-label="page for student portal">Portal</a>
+											<a href="{{ url_for('pages.sign_in_student') }}" class="mobile-btn"  alt="student portal" aria-label="page for student portal">Portal</a>
 										</ul>
 
 										
@@ -173,7 +174,7 @@
 							</div>
 							<div class="apply col-lg-2 col-12">
 								<div class="get-quote">
-									<a href="{{ url_for('pages.signinstudent') }}" class="btn portal"  alt="student portal" aria-label="page to student portal">Portal</a>
+									<a href="{{ url_for('pages.sign_in_student') }}" class="btn portal"  alt="student portal" aria-label="page to student portal">Portal</a>
 								</div>
 							</div>
 						</div>
@@ -194,7 +195,7 @@
 		<section class="slider">
 			<div class="hero-slider">
 				<!-- Start Single Slider -->
-				<div class="single-slider" style="background-image: url( {{url_for('static', filename='img/slider.avif')}} )">
+				<div class="single-slider" style="background-image: url( {{url_for('static', filename='img/logo_1.webp')}} )">
 					<div class="container">
 						<div class="row">
 							<div class="col-lg-7">
@@ -214,7 +215,7 @@
 				</div>
 				<!-- End Single Slider -->
 				<!-- Start Single Slider -->
-				<div class="single-slider" style="background-image: url( {{url_for('static', filename='img/slider2.avif')}} )">
+				<div class="single-slider" style="background-image: url( {{url_for('static', filename='img/logo.webp')}} )">
 					<div class="container">
 						<div class="row">
 							<div class="col-lg-7">
@@ -257,7 +258,7 @@
 											to study at Braham Health College Of Science.</p>
 											<div class="d-flex align-items-center justify-content-between">
 												<a href="{{ url_for('pages.admission') }}" alt="Appliction" aria-label="link for admission requirement">APPLY NOW<i class="fa fa-long-arrow-right"></i></a>
-										<a href="{{ url_for('pages.applicantlogin') }}">ADMISSION STATUS<i class="fa fa-long-arrow-right"></i></a>
+										<a href="{{ url_for('pages.applicant_login') }}">ADMISSION STATUS<i class="fa fa-long-arrow-right"></i></a>
 											</div>
 
 									</div>
@@ -370,7 +371,7 @@
 		<!-- Start Fun-facts -->
 		<div id="fun-facts" class="fun-facts section overlay">
 			<div class="container">
-				<div class="row">
+				<div class="row count">
 					<div class="col-lg-3 col-md-6 col-12">
 						<!-- Start Single Fun -->
 						<div class="single-fun">
@@ -438,16 +439,15 @@
 			<div class="col-lg-12">
 				<div class="section-title">
 					<h2>Meet Our Students</h2>
-					<img src={{user_image}} alt="#">
+					<img src={{user_image}}  alt="student image">
 				</div>
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-lg-4 col-md-6 col-12">
-				<!-- Single Blog -->
 				<div class="single-news">
 					<div class="news-head">
-						<img src={{user_image3}} alt="#">
+						<img src={{user_image3}} alt="student image">
 					</div>
 					<div class="news-body">
 						<div class="news-content">
@@ -465,7 +465,7 @@
 				<!-- Single Blog -->
 				<div class="single-news">
 					<div class="news-head">
-						<img src={{user_image6}} alt="#">
+						<img src={{user_image6}} alt="student image">
 					</div>
 					<div class="news-body">
 						<div class="news-content">
@@ -614,42 +614,17 @@
 			</div>
 			<!--/ End Copyright -->
 		</footer>
-		<!--/ End Footer Area -->
 
+		<script src="{{ url_for('static', filename='js/jquery.min.js') }}" async></script>
+        <script src="{{ url_for('static', filename='js/jquery-migrate-3.0.0.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+		<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
-		<script>
-			$(document).ready(function () {
-				$('.newsletter-inner').submit(function (e) {
-					e.preventDefault(); // Prevent form submission
-					var formData = {
-						email: $(this).find('.common-input').val()
-					};
-					var url = $(this).attr('action'); // Get the form's action URL
-					$.ajax({
-						type: 'POST',
-						url: url,
-						contentType: 'application/json',
-						data: JSON.stringify(formData),
-						success: function (response) {
-							// Handle success response
-							alert(response.message);
-							location.reload(); // Reload the page
-						},
-						error: function (xhr, status, error) {
-							// Handle error response
-							console.error(error);
-							alert("An error occurred while sending your message. Please try again later.");
-						}
-					});
-				});
-			});
-		</script>
+		
 
 		
 		<!-- jquery Min JS -->
-        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/jquery-migrate-3.0.0.js') }}"></script>
-        <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/new.js') }}"></script>
         <script src="{{ url_for('static', filename='js/easing.js') }}"></script>
         <script src="{{ url_for('static', filename='js/colors.js') }}"></script>
         <script src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
@@ -664,7 +639,6 @@
         <script src="{{ url_for('static', filename='js/steller.js') }}"></script>
         <script src="{{ url_for('static', filename='js/wow.min.js') }}"></script>
         <script src="{{ url_for('static', filename='js/jquery.magnific-popup.min.js') }}"></script>
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 

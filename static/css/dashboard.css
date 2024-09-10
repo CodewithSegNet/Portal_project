@@ -5,31 +5,128 @@ body, ul {
     list-style: none;
     text-transform: capitalize;
     overflow-x: hidden;
+    background-color: #f1efef;
+    font-family: 'Times New Roman', Times, serif;
   }
   
-  /* Styles for the dashboard layout */
   .dashboard {
     display: flex;
     flex-direction: row;
     height: 100vh;
   }
 
+
+.content-section.active {
+    display: block;
+}
+.sidebar-item.active {
+    font-weight: bold;
+}
+
+.dashboard-second-display{
+  padding-top: 0;
+}
+
+
   .black{
     color: #000;
   }
+
+  .noScroll{
+    overflow: hidden;
+  }
   
+  .aside-bar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+  }
+
+  .message-box{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .notification-item {
+    position: relative; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+}
+
+.status-indicator {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    margin: 10px; 
+    display: flex;
+    align-items: center;
+}
+
+.aside-image{
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+}
+
+.aside-logo-name{
+  font-size: .8rem;
+  letter-spacing: -1px;
+  padding: 0 5px;
+  font-weight: 700;
+}
+
+.aside-image img {
+  width: 80%;
+  height: 70px;
+}
+
+.welcome{
+  padding-left: 2rem;
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: 100;
+  font-size: 2rem;
+  letter-spacing: -1px;
+}
+
+.red-dot {
+    color: red;
+    font-size: 10px;
+    margin-left: 10px;
+}
+
+
+.font-weight-600 {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+
+  .message-box a{
+    text-align: right;
+    padding-top: 5px;
+    }
+
+  .side-image {
+    width: 60px;
+    height: 60px;
+    }
 
   .profile-pic {
-	width: 150px;
-	height: 150px;
+	width: 180px;
+	height: 200px;
   }
 
   /* Sidebar styles */
-  .sidebar {
-    width: 200px;
-    height: 1100px;
-    background-color: #f2f2f2;
-    transition: opacity 0.5s ease-in;
+  aside ul{
+  padding-top: 6rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
     
   .sidebar ul li a {
@@ -40,15 +137,23 @@ body, ul {
   .sidebar ul li a.active {
     font-weight: bold;
   }
+
+  .email-style{
+    color: #333;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: larger;
+    font-weight: 100;
+    text-transform: uppercase;
+  }
   
   /* Navbar styles */
   .navbar {
-    display: flex;
+    display:flex;
     justify-content: space-between;
+    padding-top: 25px;
     align-items: center;
-    padding: 20px;
-    background-color: #444;
-    color: #fff;
+    color: #333;
+    padding-bottom: 0;
     width: 100%;
   }
   
@@ -64,10 +169,8 @@ body, ul {
     height: 30px;
   }
   
-  /* Main Content Area styles */
   .main-content {
     flex: 1;
-    /* Additional styles as needed */
   }
   
 
@@ -107,6 +210,13 @@ input[type="submit"] {
   border: none;
   border-radius: 3px;
   cursor: pointer;
+  border-radius: 30px;
+  
+}
+
+input[type="submit"].card{
+  border: none;
+  box-shadow: none;
 }
 
 input[type="submit"]:hover {
@@ -118,31 +228,74 @@ input[type="submit"]:hover {
   flex-wrap: wrap;
   text-align: left;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .student-status h6{
   font-size: .8rem;
 }
 
+aside li{
+  width: 100%;
+}
+
+.aside-profile-image{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.notifications-section{
+  max-width: 100%;
+  width: 100%;
+}
+
+.notifications-section .list-unstyled{
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 0, 0, .125);
+  padding: .7rem;
+  border-radius: 10px;
+
+}
+
+.welcome-hr{
+  margin-top: 10px;
+}
+
+.card{
+  border-radius: 1.25rem;
+}
+
+.aside-profile-image .card{
+  border: none;
+  box-shadow: none;
+}
+
+.all-notification{
+  background-color: #fff;
+}
+
+#full-message-content{
+  height: 200px;
+  padding: 2rem;
+}
 
 .dash-btn {
   display: block;
+  text-align: left;
   width: 100%;
   text-transform: capitalize;
+  background-color: #fff;
  
   padding: 10px 20px;
   font-weight: 500;
   box-shadow: none;
-  display: inline-block;
-  -webkit-transition: all 0.4s ease;
-  -moz-transition: all 0.4s ease;
-  transition: all 0.4s ease;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
+
   border: none;
-  border-radius: 0;
-  border-radius: 4px;
 }
 
 .dash-btn:hover {
@@ -154,3 +307,4 @@ input[type="submit"]:hover {
   outline: 0;
   box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
 }
+

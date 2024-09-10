@@ -12,3 +12,9 @@ retrying
 python-decouple
 Flask-cors
 gunicorn
+Flask-Compress
+black
+flask_restx
+pytest
+uuid7
+flask_jwt_extended

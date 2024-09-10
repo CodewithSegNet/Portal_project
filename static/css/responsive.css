@@ -24,6 +24,15 @@
 	height: 100%;
 }
 
+
+.email-style{
+	display: block;
+}
+
+.notification-card{
+	margin-bottom: 0;
+}
+
 .card-responsive{
 	display: flex;
 	flex-direction: row;
@@ -46,7 +55,7 @@
 
 
 .course_table tbody tr td{
-	padding: 0.83rem;
+	padding: 0.5rem;
 	}
 
 
@@ -121,6 +130,14 @@
 @media only screen and (min-width: 768px) and (max-width: 991px) {
 /* Header Sticky */
 .image-container{
+	display: none;
+}
+
+.notification-card{
+	margin-bottom: 2rem;
+}
+
+.email-style{
 	display: none;
 }
 
@@ -509,12 +526,13 @@
 
 /* dashboard_container */
 .sidebar {
-	display: none;
+	transform: translateX(-300px);
 	z-index: 1;
 	position: absolute;
+	transition: 200ms all ease-in;
   }
   .sidebar.active {
-	display: block;
+	transform: translateX(0px);
   }
   /* Your burger menu styles */
   .navbar__right .navbar__burger {
@@ -593,6 +611,10 @@
 		width: 100%;
 	}
 
+	.notification-card{
+		margin-bottom: 2rem;
+	}
+
 	.number {
 		display: flex;
 		align-items: center;
@@ -610,6 +632,10 @@
 
 	.table-row{
 		width: 100%;
+	}
+
+	.email-style{
+		display: none;
 	}
 
 	
@@ -688,13 +714,14 @@
 	  
 
 	/* dashboard_container */
-.sidebar {
-	display: none;
-	z-index: 1;
-	position: absolute;
-  }
-  .sidebar.active {
-	display: block;
+	.sidebar {
+		transform: translateX(-300px);
+		z-index: 1;
+		position: absolute;
+		transition: 200ms all ease-in;
+	  }
+	  .sidebar.active {
+		transform: translateX(0px);
   }
   /* Your burger menu styles */
   .navbar__right .navbar__burger {
@@ -736,7 +763,7 @@
 		font-size: 14px;
 		text-transform: capitalize;
 		font-weight: 500;
-		background: #c9a768;
+		background: #00A0E3;
 		position: relative;
 		box-shadow: none;
 		display: inline-block;
@@ -831,14 +858,14 @@
 	margin:0;
 }
 .slicknav_nav li:hover a{
-	color:#c9a768;
+	color:#00A0E3;
 }
 .slicknav_nav li .dropdown li a{
 	color:#2C2D3F;
 	background:transparent;
 }
 .slicknav_nav li .dropdown li a:hover{
-	color:#c9a768;
+	color:#00A0E3;
 }
 .slicknav_nav li .slicknav_item{
 	background:transparent;
@@ -850,7 +877,7 @@
 	font-weight:400;
 }
 .slicknav_menu .slicknav_icon-bar {
-	background-color: #c9a768;
+	background-color: #00A0E3;
 	box-shadow: none;
 	text-shadow: none;
 }
@@ -858,7 +885,7 @@
 	color:#2C2D3F;
 }
 .slicknav_nav li:hover .slicknav_arrow{
-	color:#c9a768;
+	color:#00A0E3;
 }
 .slicknav_menu .slicknav_icon-bar {
 	display: block;
@@ -1411,11 +1438,29 @@
 	padding: 20px 0;
 }
 
+.welcome-student{
+	font-size: 1.4rem;
+}
+
+.notification-card{
+	margin-bottom: 2rem;
+}
 
 }
 /* Mobile Screen */
 @media only screen and (max-width: 450px) {
 
+	.email-style{
+		display: none;
+	}
+
+	.notification-card{
+		margin-bottom: 2rem;
+	}
+
+	.welcome-student{
+		font-size: 1.4rem;
+	}
 
 	.number {
 		display: flex;

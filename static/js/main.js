@@ -32,19 +32,6 @@ Version:	1.1
 =========================================
 [End Activation Code]
 =========================================*/ 
-$(document).ready(function() {
-	$('.sidebar-item').click(function(e) {
-	  e.preventDefault();
-	  // Get the data-content attribute value
-	  var contentToShow = $(this).data('content');
-
-	  // Hide all content sections
-	  $('.content-section').hide();
-
-	  // Show the selected content section
-	  $('#' + contentToShow).show();
-	});
-  });
 
 
 
@@ -57,7 +44,7 @@ $(document).ready(function() {
 //             $('body').css('background-color', 'red');
 //         } else {
 //             // If not scrolled, revert back to the default background color
-//             $('body').css('background-color', 'black'); // This will remove the inline style and let the CSS handle the background color
+//             $('body').css('background-color', 'black'); 
 //         }
 //     });
 // });
@@ -69,7 +56,6 @@ $(document).ready(function() {
      $(document).on('ready', function() {
 	
         jQuery(window).on('scroll', function() {
-			console.log("Scroll event triggered.");
 			if ($(this).scrollTop() > 200) {
 				$('#header .header-inner').addClass("sticky");
 			} else {
@@ -81,7 +67,6 @@ $(document).ready(function() {
 			Sticky Header JS
 		======================================*/ 
 		jQuery(window).on('scroll', function() {
-			console.log("Scroll event triggered."); 
 			if ($(this).scrollTop() > 100) {
 				$('.header').addClass("sticky");
 			} else {
@@ -90,7 +75,6 @@ $(document).ready(function() {
 		});
 
 		jQuery(window).on('scroll', function() {
-			console.log("Scroll event triggered."); 
 			if ($(this).scrollTop() > 100) {
 				$('.logo').addClass("max");
 			} else {
@@ -194,6 +178,7 @@ $(document).ready(function() {
 			}
 		});
 
+		
 
 	
 		
@@ -381,6 +366,7 @@ $(document).ready(function() {
 	// Toggle sidebar on burger icon click
 	$('.navbar__right').on('click', '.navbar__burger', function() {
 	  $('.sidebar').toggleClass('active');
+	  $('body').toggleClass('noScroll')
 	});
   
 	// Hide sidebar when window is resized to more than 999px
@@ -408,6 +394,8 @@ $(document).ready(function() {
         }
     });
 });
+
+
 
 
 $(document).ready(function() {
