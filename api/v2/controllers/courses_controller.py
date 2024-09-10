@@ -174,7 +174,6 @@ def assign_courses(user, department_name, department_level, semester_name):
             ]
         )
         
-        return assigned_courses if assigned_courses else None
     # Pharmacy Technician 200 second semester
     if (
         department_name == "Pharmacy Technician"
