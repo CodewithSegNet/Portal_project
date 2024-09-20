@@ -231,7 +231,7 @@ def get_student_info():
 
         encoded_student_info = quote(json.dumps(student_info))
 
-        return redirect(url_for("pages.admindash", student_info=encoded_student_info))
+        return redirect(url_for("pages.admin_dashboard", student_info=encoded_student_info))
     else:
         return jsonify({"message": "Student Not Found"}), 404
 
@@ -250,7 +250,9 @@ class Register(Resource):
         """
         A function that handles user registration
         """
-        data = request.json
+        
+        data = request.get_json()
+        
         required_fields = [
             "admission_number", "password", "name", "date_of_birth", "state",
             "gender", "semester", "department_name", "department_level", "email", "phone_number"
@@ -288,44 +290,38 @@ class Register(Resource):
 
                 db.session.add(new_user)
                 db.session.commit()  
+                
+                
+            department_level = data.get('department_level')
+            department_name = data.get('department_name')
 
-            department_level = int(data.get("department_level"))
-            department_name = data.get("department_name")
-            id = 0
+        
+            new_department = Department(department_level=department_level, department_name=department_name)
+            new_user.departments.append(new_department)  
+            db.session.add(new_department)          
+            db.session.commit()  
 
-            department = Department.query.filter_by(id=id).first()
-            if department is None:
-                # If department doesn't exist, create a new department
-                new_department = Department(
-                    department_level=department_level, department_name=department_name
-                )
-                new_user.departments.append(new_department)
-                db.session.add(new_department)
-                db.session.commit()  # Commit changes after creating a new department
-
-            if department:
+            if new_department:
                 # Set student_id in department to associate it with the new user
-                department.student_id = new_user.admission_number
+                new_department.student_id = new_user.admission_number
                 db.session.commit()
 
-            # Check if the provided semester exists in the semesters table
-            semester_name = data.get("semester")
-            if semester_name:
-                semester = Semester.query.filter_by(id=id).first()
-                if semester is None:
-                    new_semester = Semester(semester=semester_name)
-                    new_user.semesters.append(new_semester)
-                    db.session.add(new_semester)
-                    db.session.commit() 
-                else:
-                    new_user.semesters.append(semester)
 
-                if semester:
-                    # Set student_id in department to associate it with the new user
-                    semester.student_id = new_user.admission_number
-                    db.session.commit()
+            # Check if the provided semester exists in the semesters table
+            semester_name = data.get('semester')
+            new_semester = Semester(semester=semester_name)
+            new_user.semesters.append(new_semester)
+            db.session.add(new_semester)
+            db.session.commit()  
+     
+
+            if new_semester:
+                # Set student_id in department to associate it with the new user
+                new_semester.student_id = new_user.admission_number
+                db.session.commit() 
             else:
-                return {"error": "Semester value is missing or invalid"}, 400
+                return {'error': 'Semester value is missing or invalid'}, 400
+
 
             for course in new_user.courses:
                 course.student_id = new_user.admission_number
@@ -340,7 +336,7 @@ class Register(Resource):
             db.session.commit()
 
             # Return JSON successful message if data's works
-            return {"message": "User Registration Successfully Created!"}, 201
+            return {"message": "Registration Successfully Created!"}, 201
 
         # Handles database issues (connection or constraint violation)
         except SQLAlchemyError as e:
@@ -411,7 +407,7 @@ def update_password():
             return jsonify({"message": "Student not found"}), 404
 
         # Hash the new password before storing it
-        hashed_password = generate_password_hash(new_password, method="sha256")
+        hashed_password = generate_password_hash(new_password, method="pbkdf2:sha256")
         student.password = hashed_password
 
         # Update the 'updated_at' timestamp
@@ -420,13 +416,16 @@ def update_password():
         # Commit changes to the database
         db.session.commit()
 
-        return redirect(url_for("pages.admindash"))
+        return redirect(url_for("pages.admin_dashboard"))
 
     else:
         return jsonify({"message": "Method not allowed"}), 405
 
 
 # /****************************************** END OF UPDATES ROUTES ************************************************/
+
+
+
 
 @pages_bp.route("/students/dashboard", methods=['GET'])
 def student_dashboard():
@@ -467,6 +466,8 @@ def student_dashboard():
     encoded_admission_number = current_user.admission_number.replace("/", "%2F")
     user_image_path = f"/images?admission_number={encoded_admission_number}"
     image1 = url_for('static', filename='img/sunnah_college_logo-removebg-preview.png')
+    image4 = url_for('static', filename='img/default-profile.png')
+
 
     return render_template(
         "dashboard.html",
@@ -475,6 +476,7 @@ def student_dashboard():
         semesters=semesters,
         courses=courses,
         user_image=image1,
+        user_image2=image4,
         user_image_path=user_image_path,
         images=images,
         notifications_dashboard=notifications_dashboard, 

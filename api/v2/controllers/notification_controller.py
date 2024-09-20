@@ -70,13 +70,12 @@ class Notifications(Resource):
         data = request.get_json()
 
         # Validate input
-        if not all(key in data for key in ['name', 'subject', 'message']):
+        if not all(key in data for key in ['name', 'message']):
             return {"success": False, "message": "Missing required fields"}, 400
         
         # Create the notification
         notification = Notification(
             name=data['name'],
-            subject=data['subject'],
             message=data['message']
         )
         
@@ -144,8 +143,8 @@ class NotificationList(Resource):
         Endpoint to retrieve paginated notifications.
         """
         page = request.args.get('page', 1, type=int)
-        per_page = 10  # Number of notifications per page
-
+        per_page = 10 
+        
         # Retrieve paginated notifications from the database
         notifications = Notification.query.paginate(page=page, per_page=per_page, error_out=False)
 

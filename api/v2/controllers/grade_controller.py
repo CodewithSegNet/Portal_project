@@ -130,8 +130,45 @@ def add_scores():
             db.session.commit()
 
             flash("Scores added successfully", "success")
-            return redirect(url_for("pages.admindash"))
+            return redirect(url_for("pages.admin_dashboard"))
         else:
             flash("Invalid student or course ID", "danger")
 
-    return render_template("pages/admin.html", form=form)
+    return render_template("admin.html", form=form)
+
+
+# @pages_bp.route("/add_scores", methods=["POST"])
+# def add_scores():
+#     form = StudentScoreForm()
+
+#     if form.validate_on_submit():
+#         # Debug form data
+#         print("Form data:", form.data)
+
+#         # Retrieve the student based on the form data
+#         student = Student.query.filter_by(admission_number=form.student_id.data).first()
+#         if not student:
+#             flash("Student not found: Check admission number", "danger")
+#             return render_template("admin.html", form=form)  
+#         # Proceed if student is found
+#         course = Course.query.filter_by(course_code=form.course_code.data, student_id=student.id).first()
+
+#         if student and course:
+#             # Your existing logic to update course information
+#             total_score = form.ca_score.data + form.exam_score.data
+#             grade, remark = calculate_grade_remark(total_score)
+
+#             course.ca_score = form.ca_score.data
+#             course.exam_score = form.exam_score.data
+#             course.total_score = total_score
+#             course.grade = grade
+#             course.remark = remark
+
+#             db.session.commit()
+
+#             flash("Scores added successfully", "success")
+#             return redirect(url_for("pages.admin_dashboard"))
+#         else:
+#             flash("Invalid course ID or course not linked to the student", "danger")
+
+#     return render_template("admin.html", form=form)

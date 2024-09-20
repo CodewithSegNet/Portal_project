@@ -26,6 +26,7 @@ import traceback
 import base64
 import requests
 from urllib.parse import quote, unquote
+from sqlalchemy import and_
 import jwt
 import logging
 from io import BytesIO
@@ -43,18 +44,22 @@ import traceback
 
 from api.v2.models import (
     Student,
-    Admin
+    Admin,
+    Department,
+    Semester
 )
 
 from api.v2.controllers.images_controller import get_latest_image_info
-from api.v2.controllers.grade_controller import  StudentScoreForm
+from api.v2.controllers.grade_controller import  StudentScoreForm, calculate_grade_remark
 
 # 3. Local Application Imports
 from app import db
 from api.v2.models import (
     Student,
-    Admin, 
+    Admin,
+    Course 
 )
+from api.v2.controllers.student_controller import get_student_info
 from flask_restx import Namespace, Resource, fields
 from api.v2.controllers.homepage_controller import pages_bp
 
@@ -236,6 +241,172 @@ def admin_dashboard():
             student_info=student_info,
             image_info=image_info,
             form=form,
+            token=token
         )
     else:
         return jsonify({"error": "Unauthorized"}), 401
+    
+    
+    
+    
+def save_student_info(admission_number, updated_courses):
+    # Retrieve the student record from the database using admission number
+    student = Student.query.filter_by(admission_number=admission_number).first()
+
+    if not student:
+        flash("Student not found", "danger")
+        return
+
+    # Clear existing courses if necessary
+    student.courses.clear()  
+    # Loop through updated courses and create new Course objects
+    for course_data in updated_courses:
+        course = Course(
+            course_code=course_data['course_code'],
+            course_title=course_data['course_title'],
+            credit=course_data['credit'],
+            ca_score=course_data['ca_score'],
+            exam_score=course_data['exam_score']
+        )
+        student.courses.append(course)
+
+    try:
+        db.session.commit() 
+        flash("Student information updated successfully", "success")
+    except Exception as e:
+        db.session.rollback()  
+        flash(f"Error updating student information: {str(e)}", "danger")
+   
+
+
+@pages_bp.route("/admins/update_student_info", methods=["POST"])
+def update_student_info():
+    try:
+        # Parse form data from the request
+        form_data = request.form.to_dict(flat=False)
+
+        # Extract the admission number from the form data
+        admission_numbers = form_data.get('student_info[0][admission_number]', [None])
+        if not admission_numbers or not admission_numbers[0]:
+            flash("Admission number is missing.", "danger")
+            return redirect(url_for('pages.admin_dashboard'))
+
+        admission_number = admission_numbers[0]
+
+        # Find the student using the admission number
+        student = Student.query.filter_by(admission_number=admission_number).first()
+        if not student:
+            flash("Student not found", "danger")
+            return redirect(url_for('pages.admin_dashboard'))
+
+        # Process and update each course entry
+        for i in range(len(student.courses)):
+            course_code = form_data.get(f'courses[{i}][course_code]', [None])[0]
+            course_title = form_data.get(f'courses[{i}][course_title]', [None])[0]
+            credit = form_data.get(f'courses[{i}][credit]', [None])[0]
+            ca_score = form_data.get(f'courses[{i}][ca_score]', [None])[0]
+            exam_score = form_data.get(f'courses[{i}][exam_score]', [None])[0]
+
+            # Ensure numeric fields are converted to integers
+            credit = int(credit) if credit else 0
+            ca_score = int(ca_score) if ca_score else 0
+            exam_score = int(exam_score) if exam_score else 0
+
+            # Calculate total score and determine grade
+            total_score = ca_score + exam_score
+            grade, remark = calculate_grade_remark(total_score)
+
+            # Find the course to update
+            course = student.courses[i]
+            course.course_code = course_code
+            course.course_title = course_title
+            course.credit = credit
+            course.ca_score = ca_score
+            course.exam_score = exam_score
+            course.total_score = total_score
+            course.grade = grade
+            course.remark = remark
+
+        # Commit changes to the database
+        db.session.commit()
+        flash("Student information updated successfully", "success")
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f"Error updating student information: {str(e)}", "danger")
+
+    return redirect(url_for('pages.admin_dashboard'))
+
+
+
+@pages_bp.route('/filter-courses', methods=["GET"])
+def filter_course():
+    access_token = session.get('admin_token')
+    
+    if not access_token:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    # Get query parameters from request
+    course_code = request.args.get('course_code')
+    department_name = request.args.get('department_name')
+    department_level = request.args.get('department_level')
+    page = request.args.get('page', 1, type=int)
+
+    # Query the database for students based on the filters
+    query = db.session.query(Student).join(Course).join(Department).filter(
+        Course.course_code == course_code,
+        Student.department_name == department_name,
+        Department.department_level == department_level,
+    )
+
+    # Paginate the result (e.g., 10 students per page)
+    paginated_students = query.paginate(page=page, per_page=10, error_out=False)
+    students_data = paginated_students.items
+
+    # Initialize student_info and image_info, if not present
+    student_info = request.args.get("student_info")
+    if student_info:
+        student_info = json.loads(unquote(student_info))
+        image_info = get_latest_image_info(student_info.get("admission_number"))
+    else:
+        student_info = None  # Ensure student_info is always defined
+        image_info = None
+        
+    form = StudentScoreForm()
+
+    # Pass the necessary variables to the template
+    return render_template(
+        "admin.html",
+        students=students_data,
+        course_code=course_code,
+        department_name=department_name,
+        department_level=department_level,
+        current_page=paginated_students.page,
+        pages=paginated_students.pages,
+        user=access_token,
+        student_info=student_info,
+        image_info=image_info,
+        form=form
+    )
+
+
+
+
+@pages_bp.route('/update-ca-scores', methods=['POST'])
+def update_ca_scores():
+    course_code = request.form.get('course_code')
+    department_name = request.form.get('department_name')
+    department_level = request.form.get('department_level')
+    
+    ca_scores = request.form.get('ca_scores')
+    
+    for student_id, new_ca_score in ca_scores.items():
+        student = Student.query.get(student_id)
+        if student:
+            student.ca_score = new_ca_score
+            db.session.add(student)
+    
+    db.session.commit()
+    
+    flash('CA Scores updated successfully!', 'success')
+    return redirect(url_for('pages.filter_courses', course_code=course_code, department_name=department_name, department_level=department_level))

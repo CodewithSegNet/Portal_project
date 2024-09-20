@@ -51,7 +51,7 @@ class Student(db.Model):
     semesters = db.relationship("Semester", backref="students")
     
     # Relationship with notification
-    notifications = db.relationship("Notification", secondary=student_notification, backref='student_notifications')
+    notifications = db.relationship('Notification', secondary=student_notification, back_populates='students')
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -67,3 +67,7 @@ class Student(db.Model):
         email_pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
         if not re.match(email_pattern, email):
             raise ValueError("Invalid email format")
+        
+        
+        
+

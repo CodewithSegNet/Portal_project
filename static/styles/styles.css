@@ -1,153 +1,136 @@
-html{
+html {
   margin: 0 auto;
   overflow-x: hidden;
-
 }
 
 body {
   margin: 0 auto;
-    font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow-x: hidden;
-    height: 100vh;
-    background-color: #f4f4f4;
-  }
-
-
-  .password-container {
-    position: relative;
-  }
-  
-  #password {
-    padding-right: 30px;
-  }
-  
-  #togglePassword {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-45%);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    width: 10%;
-  }
-  
-
-
-  
-  h2 {
-    margin-top: 0;
-  }
-  
-  .group {
-    margin-bottom: 6px;
-  }
-
-
-p{
-    padding-bottom: 0.8rem;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  height: 100vh;
+  background-color: #f4f4f4;
 }
-  input[type="text"],
-  input[type="password"],
-  button {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-sizing: border-box;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  .forgot-password{
-    text-decoration: none;
-    color: #007bff;
-    display: block;
-    margin-top: 10px;
-  }
 
-  a.forgot-password:visited{
-    color: #007bff;
-  }
-  
-  .forgot-password:hover {
-    text-decoration: underline;
-  }
+.password-container {
+  position: relative;
+}
 
+#password {
+  padding-right: 30px;
+}
 
-  /* Your existing CSS styles */
+#togglePassword {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-45%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 10%;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.group {
+  margin-bottom: 6px;
+}
+
+p {
+  padding-bottom: 0.8rem;
+}
+input[type="text"],
+input[type="password"],
+button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.forgot-password {
+  text-decoration: none;
+  color: #007bff;
+  display: block;
+  margin-top: 10px;
+}
+
+a.forgot-password:visited {
+  color: #007bff;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
 
 /* Your existing CSS styles */
 
+/* Your existing CSS styles */
 
-  
-  .side-by-side {
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .image-container,
-  .card {
-    flex: 1;
-    text-align: center;
-  }
-  
-  .image-container img {
-    max-width: 100%;
-    height: auto;
-    max-height: 100%;
-  }
+.side-by-side {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
 
-  
-  .checkbox-group {
-    align-items: center;
-  }
-  
-  
-  .card {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 50px;
-  }
+.image-container,
+.card {
+  flex: 1;
+  text-align: center;
+}
 
+.image-container img {
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+}
 
- 
+.checkbox-group {
+  align-items: center;
+}
 
-  .home{
-    width: 100%;
-    display: flex;
-    text-align: center;
-    align-items: center;
-    justify-content: space-around;
-  }
+.card {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 50px;
+}
 
+.home {
+  width: 100%;
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: space-around;
+}
 
-  .home a{
-    display: flex;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
-    text-decoration: underline;
-  }
+.home a {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  text-decoration: underline;
+}
 
-  
-  
-  .home a:hover{
-    color: #00A0E3;
-    text-decoration: underline;
-  }
+.home a:hover {
+  color: #00a0e3;
+  text-decoration: underline;
+}
 
-  .larger-icon {
-    font-size: 20px; 
+.larger-icon {
+  font-size: 20px;
 }
