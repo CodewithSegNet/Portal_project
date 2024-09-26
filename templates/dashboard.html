@@ -75,6 +75,7 @@
           {% endif %}
           <div class="card mt-4 mb-4">
             <form action="/upload-image" method="post" enctype="multipart/form-data" class="aside-profile-image">
+              <img id="profileImage" src="path_to_placeholder_image" alt="Profile Image">
               <input type="file" name="pics" accept="image/*" id="fileInput" style="display: none;">
               <input class="upload-btn btn" type="submit" value="Upload Image">
             </form>

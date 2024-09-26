@@ -5,12 +5,6 @@ profileImage.addEventListener("click", () => {
   fileInput.click();
 });
 
-
-
-profileImage.addEventListener('click', () => {
-  fileInput.click(); 
-});
-
 // Optional: Update the image preview after selection
 fileInput.addEventListener("change", (event) => {
   const file = event.target.files[0];
@@ -22,4 +16,3 @@ fileInput.addEventListener("change", (event) => {
     reader.readAsDataURL(file);
   }
 });
-
