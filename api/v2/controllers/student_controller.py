@@ -388,7 +388,7 @@ def update_profile():
         # Commit changes to the database
         db.session.commit()
 
-        return redirect(url_for("pages.dashboard"))
+        return redirect(url_for("pages.student_dashboard"))
     else:
         return jsonify({"error": "Invalid request method"}), 405
 
