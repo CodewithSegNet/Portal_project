@@ -20,6 +20,7 @@ import traceback
 import base64
 import requests
 from urllib.parse import quote, unquote
+from sqlalchemy import func
 import jwt
 import logging
 from io import BytesIO
@@ -114,7 +115,9 @@ class StudentLogin(Resource):
             admission_number = data['admission_number']
             password = data['password']
 
-            user = Student.query.filter_by(admission_number=admission_number).first()
+            # Querying the database while ignoring case
+            user = Student.query.filter(func.lower(Student.admission_number) == func.lower(admission_number)).first()            
+            
             if user and check_password_hash(user.password, password):
                 # Create a JWT token
                 token = jwt.encode(
