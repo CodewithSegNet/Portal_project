@@ -30,7 +30,6 @@ class Notification(db.Model):
     __tablename__ = "notifications"
     id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    subject = db.Column(db.String(100), nullable=False)
     message = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     updated_at = db.Column(

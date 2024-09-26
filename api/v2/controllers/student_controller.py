@@ -251,8 +251,15 @@ class Register(Resource):
         A function that handles user registration
         """
         
-        data = request.get_json()
-        
+        # Check if the request content type is JSON or form
+        if request.content_type == 'application/json':
+            data = request.get_json()
+        else:
+            data = request.form.to_dict()
+            
+        print(data)
+            
+                    
         required_fields = [
             "admission_number", "password", "name", "date_of_birth", "state",
             "gender", "semester", "department_name", "department_level", "email", "phone_number"
@@ -328,10 +335,6 @@ class Register(Resource):
 
             new_course = assign_courses(new_user, department_name, department_level, semester_name)
             
-            if new_course is None:
-                print("No courses assigned. Please check the `assign_courses` function.")
-            else:
-                print(f"Courses assigned: {new_course}")
 
             db.session.commit()
 

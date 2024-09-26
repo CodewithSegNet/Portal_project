@@ -409,172 +409,6 @@
 
 
 
-        <div id="anouncement" class="content-section" style="display: none">
-          <div class="dashboard_container container px-5 d-flex justify-content-center">
-            <div class="row anouncement">
-              <div class="admin_board pt-4">
-                  <!-- Notification Form -->
-                  <form
-  id="notificationForm"
-  class="form-base fade-in-alt pr-0"
-  method="post"
->
-
-
-<div class="container card">
-  <h5 class="pb-3 pt-3">Send Notification</h5>
-
-  <div class="flash-messages">
-    <div class="alert" style="display: none">
-      <div id="message"></div>
-    </div>
-  </div>
-
-
-  <div class="row">
-    <div class="col-md-12 pt-2">
-      <label for="name">Subject *</label>
-      <input type="text" id="name" name="name" required />
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12 pt-2">
-      <label for="message">Message *</label>
-      <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-6 pt-2">
-      <label for="semesters">Semester *</label>
-      <select id="semesters" name="semesters" required>
-        <option value="first">first</option>
-        <option value="second">second</option>
-      </select>
-    </div>
- 
-
-    <div class="col-md-6 pt-2">
-      <label for="department_level"
-        >Department Level *</label
-      >
-      <select
-        id="department_level"
-        name="department_level"
-        required
-      >
-        <option value="100">100</option>
-        <option value="200">200</option>
-        <option value="300">300</option>
-      </select>
-    </div>
-
-
-
-    <div class="col-md-12 pt-2">
-      <label for="department_name">Department Name *</label>
-      <select name="department_name" id="department_name">
-        <option value="Pharmacy Technician">
-          Pharmacy Technician
-        </option>
-        <option value="Community Health Extention">
-          Community Health Extention
-        </option>
-        <option value="medical laboratory technician">
-          medical laboratory technician
-        </option>
-      </select>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-6 form-check form-checkbox">
-      <input class="form-check-input " type="checkbox" id="send_to_everybody" name="send_to_everybody" />
-      <label class="form-check-label form-label" for="send_to_everybody">Send to Everybody</label>
-    </div>
-  </div>
-
-          
-                      <button type="submit" class="btn btn-primary mt-2 mb-3">Send Notification</button>
-                  </form>
-              </div>
-
-
-              </div>
-            </div>
-          </div>
-        </div>
-        
-
-        <script>
-          // Handle form submission using JavaScript
-        
-  // Handle form submission using JavaScript
-  document.getElementById('notificationForm').addEventListener('submit', function(event) {
-    event.preventDefault(); 
-    
-    const token = "{{ token }}"; 
-    
-    // Check if the token is present
-    if (!token) {
-        alert('Token is missing. Please log in.');
-        return;
-    }
-
-    // Get form data
-    const formData = new FormData(this);
-
-    // Fetch API request
-    fetch('/api/v2/notifications/', {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: formData.get('name'),
-            message: formData.get('message'),
-            semesters: formData.get('semesters'),
-            department_name: formData.get('department_name'),
-            department_level: formData.get('department_level'),
-            send_to_everybody: formData.get('send_to_everybody') ? true : false
-        })
-    })
-    .then(response => response.json()) // Ensure response is JSON
-    .then(data => {
-        const alertDiv = document.querySelector('.alert');
-        const messageDiv = document.getElementById('message');
-        
-        if (data.success) {
-            alertDiv.classList.remove('alert-danger');
-            alertDiv.classList.add('alert-success');
-            messageDiv.textContent = 'Notification sent successfully!';
-        } else {
-            alertDiv.classList.remove('alert-success');
-            alertDiv.classList.add('alert-danger');
-            messageDiv.textContent = data.message || 'An error occurred while sending the notification.';
-        }
-
-        // Show the alert
-        alertDiv.style.display = 'block';
-    })
-    .catch(error => {
-        const alertDiv = document.querySelector('.alert');
-        const messageDiv = document.getElementById('message');
-
-        alertDiv.classList.remove('alert-success');
-        alertDiv.classList.add('alert-danger');
-        messageDiv.textContent = 'An error occurred: ' + error.message;
-
-        // Show the alert
-        alertDiv.style.display = 'block';
-    });
-});
-      </script>
-      
-
-
 
         <div id="registration" class="content-section" style="display: none">
           <div class="dashboard_container container px-5">
@@ -727,6 +561,177 @@
 
 
 
+
+
+
+        <div id="anouncement" class="content-section" style="display: none">
+          <div class="dashboard_container container px-5 d-flex justify-content-center">
+            <div class="row anouncement">
+              <div class="admin_board pt-4">
+                  <!-- Notification Form -->
+                  <form
+  id="notificationForm"
+  class="form-base fade-in-alt pr-0"
+  method="post"
+>
+
+
+<div class="container card">
+  <h5 class="pb-3 pt-3">Send Notification</h5>
+
+  <div class="flash-messages">
+    <div class="alert" style="display: none">
+      <div id="message"></div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-12 pt-2">
+      <label for="name">Subject *</label>
+      <input type="text" id="name" name="name" required />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 pt-2">
+      <label for="message">Message *</label>
+      <textarea class="form-control" id="message" name="message" rows="3" required></textarea>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 pt-2">
+      <label for="semesters">Semester *</label>
+      <select id="semesters" name="semesters" required>
+        <option value="first">first</option>
+        <option value="second">second</option>
+      </select>
+    </div>
+ 
+
+    <div class="col-md-6 pt-2">
+      <label for="department_level"
+        >Department Level *</label
+      >
+      <select
+        id="department_level"
+        name="department_level"
+        required
+      >
+        <option value="100">100</option>
+        <option value="200">200</option>
+        <option value="300">300</option>
+      </select>
+    </div>
+
+
+
+    <div class="col-md-12 pt-2">
+      <label for="department_name">Department Name *</label>
+      <select name="department_name" id="department_name">
+        <option value="Pharmacy Technician">
+          Pharmacy Technician
+        </option>
+        <option value="Community Health Extention">
+          Community Health Extention
+        </option>
+        <option value="medical laboratory technician">
+          medical laboratory technician
+        </option>
+      </select>
+    </div>
+  </div>
+<!-- 
+  <div class="row">
+    <div class="col-md-6 form-check form-checkbox">
+      <input class="form-check-input " type="checkbox" id="send_to_everybody" name="send_to_everybody" />
+      <label class="form-check-label form-label" for="send_to_everybody">Send to Everybody</label>
+    </div>
+  </div> -->
+
+          
+                      <button type="submit" class="btn btn-primary mt-2 mb-3">Send Notification</button>
+                  </form>
+              </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+        
+
+        <script>
+          // Handle form submission using JavaScript
+        
+  // Handle form submission using JavaScript
+  document.getElementById('notificationForm').addEventListener('submit', function(event) {
+    event.preventDefault(); 
+    
+    const token = "{{ token }}"; 
+    
+    // Check if the token is present
+    if (!token) {
+        alert('Token is missing. Please log in.');
+        return;
+    }
+
+    // Get form data
+    const formData = new FormData(this);
+
+    // Fetch API request
+    fetch('/api/v2/notifications/', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: formData.get('name'),
+            message: formData.get('message'),
+            semesters: formData.get('semesters'),
+            department_name: formData.get('department_name'),
+            department_level: formData.get('department_level'),
+            send_to_everybody: formData.get('send_to_everybody') ? true : false
+        })
+    })
+    .then(response => response.json()) // Ensure response is JSON
+    .then(data => {
+        const alertDiv = document.querySelector('.alert');
+        const messageDiv = document.getElementById('message');
+        
+        if (data.success) {
+            alertDiv.classList.remove('alert-danger');
+            alertDiv.classList.add('alert-success');
+            messageDiv.textContent = 'Notification sent successfully!';
+        } else {
+            alertDiv.classList.remove('alert-success');
+            alertDiv.classList.add('alert-danger');
+            messageDiv.textContent = data.message || 'An error occurred while sending the notification.';
+        }
+
+        // Show the alert
+        alertDiv.style.display = 'block';
+    })
+    .catch(error => {
+        const alertDiv = document.querySelector('.alert');
+        const messageDiv = document.getElementById('message');
+
+        alertDiv.classList.remove('alert-success');
+        alertDiv.classList.add('alert-danger');
+        messageDiv.textContent = 'An error occurred: ' + error.message;
+
+        // Show the alert
+        alertDiv.style.display = 'block';
+    });
+});
+      </script>
+      
+
+
+
+       
 
 
 
@@ -1050,6 +1055,8 @@
     <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
     <!-- Your custom scripts -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
+
     <!-- ... other custom scripts ... -->
 <script src="{{ url_for('static', filename='js/jquery.scrollUp.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/jquery.nav.js') }}"></script>

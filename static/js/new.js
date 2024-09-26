@@ -33,76 +33,6 @@ $(document).ready(function () {
 
 
 
-document.addEventListener('DOMContentLoaded', () => {
-  const togglePassword = document.querySelector('#togglePassword');
-  const passwordField = document.querySelector('#password');
-
-  togglePassword.addEventListener('click', () => {
-    // Toggle the type attribute
-    const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordField.setAttribute('type', type);
-
-    // Update button text or icon based on visibility
-    togglePassword.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
-  });
-});
-
-
-
-
-document
-  .getElementById("myForm")
-  .addEventListener("submit", function (event) {
-    event.preventDefault();
-
-    const formElement = document.getElementById("myForm");
-    const formData = new FormData(formElement);
-
-    console.log(formData.get('password'));
-
-    const url = formElement.getAttribute("data-url");
-
-    const plainFormData = Object.fromEntries(formData.entries());
-
-    fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(plainFormData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const messageElement = document.getElementById("message");
-        if (messageElement) {
-          const messageContainer = messageElement.closest(".warning");
-          if (messageContainer) {
-            messageElement.innerHTML = data.error
-              ? `<p class="text-danger">${data.error}</p>`
-              : `<p class="success">Registration successful!</p>`;
-            messageContainer.style.display = "block";
-          }
-        }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        const messageElement = document.getElementById("message");
-        if (messageElement) {
-          const messageContainer = messageElement.closest(".warning");
-          if (messageContainer) {
-            messageElement.innerHTML = `<p class="text-danger">Something went wrong. Please try again.</p>`;
-            messageContainer.style.display = "block";
-          }
-        }
-      });
-  });
-
-
-  
-
-
-
-
 $(document).ready(function () {
   $(".sidebar-item").click(function (e) {
     e.preventDefault();
@@ -119,31 +49,6 @@ $(document).ready(function () {
 
 
 
-
-const profileImage = document.getElementById("profileImage");
-const fileInput = document.getElementById("fileInput");
-
-profileImage.addEventListener("click", () => {
-  fileInput.click();
-});
-
-
-
-profileImage.addEventListener('click', () => {
-  fileInput.click(); 
-});
-
-// Optional: Update the image preview after selection
-fileInput.addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      profileImage.src = e.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-});
 
 
 
