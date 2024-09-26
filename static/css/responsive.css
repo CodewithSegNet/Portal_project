@@ -683,7 +683,7 @@
 
   /* dashboard_container */
   .sidebar {
-    transform: translateX(-300px);
+    transform: translateX(-600px);
     z-index: 1;
     position: absolute;
     transition: 200ms all ease-in;
